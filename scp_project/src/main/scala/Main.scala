@@ -26,7 +26,7 @@ object Main {
 		val assembler = new VectorAssembler()
 				.setInputCols(Array("x", "y"))
 				.setOutputCol("features")
-				val featureVector = assembler.transform(data)
+		val featureVector = assembler.transform(data)
 
 		// Train KMeans model
 		val k = 3 // number of clusters
