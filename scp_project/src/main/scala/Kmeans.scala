@@ -1,8 +1,9 @@
 import org.apache.spark.sql.SparkSession
 import scala.io.Source
+import scala.collection.mutable.Map
 
 object Kmeans extends clustering_alg {
-	val k: Int = 3
+	val k: Int = 10
 	val maxIterations: Int = 100
 
 	def main(args: Array[String]): Unit = {
@@ -17,19 +18,6 @@ object Kmeans extends clustering_alg {
 		val clusters = kMeans(data.collect.toList, centroids, maxIterations)
 		printResults(clusters)
 		spark.stop()
-	}
-
-	def initializeCentroids(k: Int, data: org.apache.spark.rdd.RDD[(Double, Double)]): List[(Double, Double)] = {
-		val xCoords = data.map(_._1)
-		val yCoords = data.map(_._2)
-		val xRange = xCoords.max - xCoords.min
-		val yRange = yCoords.max - yCoords.min
-		val centroids = for (i <- 1 to k) yield {
-			val x = xCoords.min + (xRange * scala.util.Random.nextDouble)
-			val y = yCoords.min + (yRange * scala.util.Random.nextDouble)
-			(x, y)
-		}
-		centroids.toList
 	}
 
 	def kMeans(data: List[(Double, Double)], centroids: List[(Double, Double)], maxIterations: Int): Map[(Double, Double), List[(Double, Double)]] = {
@@ -54,14 +42,5 @@ object Kmeans extends clustering_alg {
 			iteration += 1
 		}
 		clusters
-	}
-
-	def printResults(clusters: Map[(Double, Double), List[(Double, Double)]]): Unit = {
-		println("\n\nCluster:")
-		clusters.foreach(cluster => {
-			val centroid = cluster._1
-			val points = cluster._2
-			println(s"Centroid: $centroid, Points: ${points.length}")
-		})
 	}
 }
