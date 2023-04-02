@@ -1,15 +1,20 @@
 import org.apache.spark.sql.SparkSession
 import scala.io.Source
 
-object KMeans extends clustering_alg {
+object Kmeans extends clustering_alg {
 	val k: Int = 3
 	val maxIterations: Int = 100
 
 	def main(args: Array[String]): Unit = {
-		val spark = SparkSession.builder.appName("KMeansSpark").getOrCreate()
+		val spark = SparkSession
+		  .builder
+		  .appName("KMeansSpark")
+		  .config("spark.master", "local")
+		  .getOrCreate()
+
 		val data = loadData(spark, file_path)
 		val centroids = initializeCentroids(k, data)
-		val clusters = kMeans(data, centroids, maxIterations)
+		val clusters = kMeans(data.collect.toList, centroids, maxIterations)
 		printResults(clusters)
 		spark.stop()
 	}
@@ -52,12 +57,11 @@ object KMeans extends clustering_alg {
 	}
 
 	def printResults(clusters: Map[(Double, Double), List[(Double, Double)]]): Unit = {
-		for ((centroid, points) <- clusters) {
-			println(s"Cluster with centroid $centroid:")
-			for (point <- points) {
-				println(s"  $point")
-			}
-			println()
-		}
+		println("\n\nCluster:")
+		clusters.foreach(cluster => {
+			val centroid = cluster._1
+			val points = cluster._2
+			println(s"Centroid: $centroid, Points: ${points.length}")
+		})
 	}
 }
