@@ -1,48 +1,56 @@
-import org.apache.spark.ml.clustering.KMeans
-import org.apache.spark.ml.feature.VectorAssembler
+import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.functions._
-import scala.collection.mutable.Map
-import scala.io.Source
+import scala.collection.mutable
+
 object KCenter extends clustering_alg {
-    val k: Int = 3
+    val k: Int = 25
     def main(args: Array[String]): Unit = {
         val spark = SparkSession
           .builder
-          .appName("KMeansSpark")
+          .appName("KCenter")
           .config("spark.master", "local")
           .getOrCreate()
 
         // read from trait clustering_alg
         val data = loadData(spark, file_path)
-        val clusters = kCenter(spark, data.collect.toList, k)
+        val clusters = kCenter(data, k)
         printResults(clusters)
         spark.stop()
-
     }
 
-    //This implementation uses the KMeans class from the Apache Spark MLlib library to perform clustering.
-    //It takes a list of data points and the number of clusters (k) as input and returns a map of centroids to their respective clusters as output.
-    def kCenter(spark: SparkSession,data: List[(Double, Double)], k: Int): Map[(Double, Double), List[(Double, Double)]] = {
-        import spark.implicits._
-
-        val df = data.toDF("x", "y")
-        val assembler = new VectorAssembler().setInputCols(Array("x", "y")).setOutputCol("features")
-        val dataset = assembler.transform(df)
-
-        val kmeans = new KMeans().setK(k).setSeed(1L)
-        val model = kmeans.fit(dataset)
-
-        val predictions = model.transform(dataset)
-        val clusters = predictions.groupBy("prediction").agg(avg($"x"), avg($"y")).collect()
-
-        val clusterMap = Map.empty[(Double, Double), List[(Double, Double)]]
-        for (cluster <- clusters) {
-            val centroid = (cluster(1).asInstanceOf[Double], cluster(2).asInstanceOf[Double])
-            val points = predictions.filter($"prediction" === cluster(0)).select("x", "y").collect()
-            val pointsList = points.map(point => (point(0).asInstanceOf[Double], point(1).asInstanceOf[Double])).toList
-            clusterMap += (centroid -> pointsList)
+    def kCenter(data: RDD[(Double, Double)], k: Int): Array[(Double, Double)] = {
+        val points = data.collect()
+        val centers = mutable.Map(points.head -> 0)
+        while (centers.size < k) {
+            val distances = points.map { p =>
+                centers.keys.map(c => math.sqrt((p._1 - c._1) * (p._1 - c._1) + (p._2 - c._2) * (p._2 - c._2))).min
+            }
+            val newCenter = points(distances.indexOf(distances.max))
+            centers(newCenter) = 0
         }
-        clusterMap
+        centers.keys.toArray
+    }
+
+    def kCenter_mr(data: RDD[(Double, Double)], k: Int): Array[(Double, Double)] = {
+        // Select the first point as the first center
+        val centers = data.take(1)
+
+        // Compute distances between points and centers
+        val distances = data.map(p => (p, centers.map(c => euclideanDistance(p, c)).min))
+
+        // Iterate k-1 times to select the remaining centers
+        for (i <- 2 to k) {
+            // Select the farthest point from the current centers
+            val farthest = distances.reduce((a, b) => if (a._2 > b._2) a else b)._1
+
+            // Add the farthest point to the centers list
+            centers :+ farthest
+
+            // Recompute distances between points and centers
+            distances.map { case (p, _) => (p, centers.map(c => euclideanDistance(p, c)).min) }
+        }
+
+        // Return the final centers as an array
+        centers.toArray
     }
 }

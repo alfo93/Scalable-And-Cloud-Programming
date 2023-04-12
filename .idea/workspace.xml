@@ -5,109 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="443facf7-c94e-4952-bd57-000f5ecc80f4" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__com_chuusai_shapeless_2_13_2_3_3_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__com_github_fommil_netlib_core_1_1_2_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__com_github_wendykierp_JTransforms_3_1_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__com_google_flatbuffers_flatbuffers_java_1_12_0_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__com_sun_istack_istack_commons_runtime_3_0_8_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__com_univocity_univocity_parsers_2_9_1_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__dev_ludovic_netlib_arpack_2_2_1_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__dev_ludovic_netlib_blas_2_2_1_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__dev_ludovic_netlib_lapack_2_2_1_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__io_airlift_aircompressor_0_21_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__jakarta_xml_bind_jakarta_xml_bind_api_2_3_2_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__javax_annotation_javax_annotation_api_1_3_2_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__net_sf_opencsv_opencsv_2_3_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__net_sourceforge_f2j_arpack_combined_all_0_1_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_antlr_antlr4_runtime_4_8_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_apache_arrow_arrow_format_7_0_0_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_apache_arrow_arrow_memory_core_7_0_0_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_apache_arrow_arrow_memory_netty_7_0_0_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_apache_arrow_arrow_vector_7_0_0_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_apache_hive_hive_storage_api_2_7_2_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_apache_orc_orc_core_1_7_8_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_apache_orc_orc_mapreduce_1_7_8_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_apache_orc_orc_shims_1_7_8_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_apache_parquet_parquet_column_1_12_2_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_apache_parquet_parquet_common_1_12_2_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_apache_parquet_parquet_encoding_1_12_2_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_apache_parquet_parquet_format_structures_1_12_2_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_apache_parquet_parquet_hadoop_1_12_2_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_apache_parquet_parquet_jackson_1_12_2_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_apache_spark_spark_catalyst_2_13_3_3_2_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_apache_spark_spark_graphx_2_13_3_3_2_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_apache_spark_spark_mllib_2_13_3_3_2_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_apache_spark_spark_mllib_local_2_13_3_3_2_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_apache_spark_spark_sketch_2_13_3_3_2_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_apache_spark_spark_sql_2_13_3_3_2_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_apache_spark_spark_streaming_2_13_3_3_2_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_codehaus_janino_commons_compiler_3_0_16_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_codehaus_janino_janino_3_0_16_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_glassfish_jaxb_jaxb_runtime_2_3_2_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_jetbrains_annotations_17_0_0_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_scala_lang_modules_scala_collection_compat_2_13_2_2_0_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_scala_lang_modules_scala_parser_combinators_2_13_1_1_2_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_scalanlp_breeze_2_13_1_2_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_scalanlp_breeze_macros_2_13_1_2_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_threeten_threeten_extra_1_5_0_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_typelevel_algebra_2_13_2_0_1_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_typelevel_cats_kernel_2_13_2_1_1_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_typelevel_spire_2_13_0_17_0_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_typelevel_spire_macros_2_13_0_17_0_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_typelevel_spire_platform_2_13_0_17_0_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_typelevel_spire_util_2_13_0_17_0_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__pl_edu_icm_JLargeArrays_1_5_jar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/.bsp/sbt.json" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/.bsp/sbt.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_apache_yetus_audience_annotations_0_5_0_jar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/.idea/libraries/sbt__org_apache_yetus_audience_annotations_0_12_0_jar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/.idea/modules/scp_project-build.iml" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/.idea/modules/scp_project-build.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/.idea/modules/scp_project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/.idea/modules/scp_project.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/config-classes/$0e5bb45ae75c2e0605e5$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/config-classes/$0e5bb45ae75c2e0605e5.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/config-classes/$0e5bb45ae75c2e0605e5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/config-classes/$7a7cc0cd27faffa3ee21$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/config-classes/$7a7cc0cd27faffa3ee21.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/config-classes/$7a7cc0cd27faffa3ee21.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/config-classes/$b138285838b350ed3e6f$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/config-classes/$b138285838b350ed3e6f.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/config-classes/$b138285838b350ed3e6f.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/config-classes/$c2fe9ca77b159c55eb11$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/config-classes/$c2fe9ca77b159c55eb11.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/config-classes/$c2fe9ca77b159c55eb11.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/config-classes/$df32589a7d084f477b9d$.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/config-classes/$df32589a7d084f477b9d.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/config-classes/$df32589a7d084f477b9d.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/scala-2.12/sbt-1.0/update/update_cache_2.12/inputs" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/project/target/scala-2.12/sbt-1.0/update/update_cache_2.12/inputs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/scala-2.12/sbt-1.0/update/update_cache_2.12/output" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/project/target/scala-2.12/sbt-1.0/update/update_cache_2.12/output" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/streams/_global/update/_global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/project/target/streams/_global/update/_global/streams/out" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/streams/compile/_global/_global/compileOutputs/previous" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/project/target/streams/compile/_global/_global/compileOutputs/previous" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/streams/compile/dependencyClasspath/_global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/project/target/streams/compile/dependencyClasspath/_global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/streams/compile/exportedProducts/_global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/project/target/streams/compile/exportedProducts/_global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/streams/compile/externalDependencyClasspath/_global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/project/target/streams/compile/externalDependencyClasspath/_global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/streams/compile/incOptions/_global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/project/target/streams/compile/incOptions/_global/streams/out" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/streams/compile/managedClasspath/_global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/project/target/streams/compile/managedClasspath/_global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/streams/runtime/dependencyClasspath/_global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/project/target/streams/runtime/dependencyClasspath/_global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/streams/runtime/exportedProducts/_global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/project/target/streams/runtime/exportedProducts/_global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/streams/runtime/externalDependencyClasspath/_global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/project/target/streams/runtime/externalDependencyClasspath/_global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/streams/runtime/fullClasspath/_global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/project/target/streams/runtime/fullClasspath/_global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/streams/runtime/internalDependencyClasspath/_global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/project/target/streams/runtime/internalDependencyClasspath/_global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/project/target/streams/runtime/managedClasspath/_global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/project/target/streams/runtime/managedClasspath/_global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/src/main/scala/Main.scala" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/src/main/scala/Main.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/target/.history3" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/.history3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.13/classes/Main$.class" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/scala-2.13/classes/Main$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.13/update/update_cache_2.13/inputs" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/scala-2.13/update/update_cache_2.13/inputs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.13/update/update_cache_2.13/output" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/scala-2.13/update/update_cache_2.13/output" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/_global/_global/csrLogger/_global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/streams/_global/_global/csrLogger/_global/streams/out" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/_global/_global/dumpStructure/_global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/streams/_global/_global/dumpStructure/_global/streams/out" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/_global/dependencyPositions/_global/streams/update_cache_2.13/output_dsp" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/streams/_global/dependencyPositions/_global/streams/update_cache_2.13/output_dsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/_global/updateClassifiers/_global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/streams/_global/updateClassifiers/_global/streams/out" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/_global/updateClassifiers/_global/streams/update_cache_2.13/output" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/streams/_global/updateClassifiers/_global/streams/update_cache_2.13/output" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/compile/externalDependencyClasspath/_global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/streams/compile/externalDependencyClasspath/_global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/compile/managedClasspath/_global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/streams/compile/managedClasspath/_global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/runtime/externalDependencyClasspath/_global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/streams/runtime/externalDependencyClasspath/_global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/runtime/managedClasspath/_global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/streams/runtime/managedClasspath/_global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/test/externalDependencyClasspath/_global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/streams/test/externalDependencyClasspath/_global/streams/export" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/test/managedClasspath/_global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/streams/test/managedClasspath/_global/streams/export" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/src/main/scala/KCenter.scala" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/src/main/scala/KCenter.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/src/main/scala/Kmeans.scala" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/src/main/scala/Kmeans.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/src/main/scala/clustering_alg.scala" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/src/main/scala/clustering_alg.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.13/classes/KCenter$$typecreator10$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.13/classes/KCenter$.class" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/scala-2.13/classes/KCenter$.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.13/classes/KCenter.class" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/scala-2.13/classes/KCenter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.13/classes/Kmeans$.class" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/scala-2.13/classes/Kmeans$.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.13/classes/Kmeans.class" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/scala-2.13/classes/Kmeans.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.13/classes/clustering_alg.class" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/scala-2.13/classes/clustering_alg.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -165,6 +72,19 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="scala" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="scala" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="ScalaProjectSettings">
     <option name="scala3DisclaimerShown" value="true" />
@@ -180,6 +100,7 @@
       <workItem from="1677674235450" duration="1187000" />
       <workItem from="1680361130619" duration="27000" />
       <workItem from="1680361188139" duration="287000" />
+      <workItem from="1681226636696" duration="45000" />
     </task>
     <servers />
   </component>
