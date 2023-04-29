@@ -1,20 +1,20 @@
 package sequential
 
 import org.apache.spark.sql.SparkSession
-import sequential.ElbowMethod.euclideanDistance
+
+import scala.util.Random
 
 object kmeans extends sequential.clustering_alg {
-	var maxIterations: Int = 100
-
 	def main(args: Array[String]): Unit = {
+		val random = new Random(42)
 		val spark = SparkSession.builder().appName("Sequential-KMeans").master("local[*]").getOrCreate()
 		spark.sparkContext.setLogLevel("ERROR")
 		val data = loadData(spark).collect().toList
 		val start = System.nanoTime()
-		val bestK = elbowMethod(data, 2, 20, 10)
+		val bestK = elbowMethod(data, 2, 100, 100)
 		val end = System.nanoTime()
 		println("\nTime: " + (end - start) / 1e9d + "s\n")
-		println(s"Best K: $bestK")
+		println("Best K: " + bestK)
 		spark.stop()
 		bestK
 	}
@@ -45,7 +45,7 @@ object kmeans extends sequential.clustering_alg {
 	}
 
 
-	def elbowMethod(data: List[(Double, Double)], minK: Int, maxK: Int, maxIterations: Int): Unit = {
+	def elbowMethod(data: List[(Double, Double)], minK: Int, maxK: Int, maxIterations: Int): Int = {
 		val ks = Range(minK, maxK + 1)
 		val wcss = ks.map(k => {
 			println(s"\nK: $k")
@@ -60,7 +60,6 @@ object kmeans extends sequential.clustering_alg {
 		})
 
 		val diff = wcss.zip(wcss.tail).map(pair => pair._2 - pair._1)
-		val bestK = ks(diff.indexOf(diff.max) + 1)
-		bestK
+		ks(diff.indexOf(diff.max) + 1)
 	}
 }
