@@ -21,6 +21,27 @@ object kmeans extends parallel.clustering_alg {
 	}
 
 	def kMeans(data: RDD[(Double, Double)], centroids: List[(Double, Double)], maxIterations: Int): Array[(Double, Double)] = {
+		var currentCentroids = centroids
+		var iteration = 0
+		var clusters = Map.empty[(Double, Double), List[(Double, Double)]]
+		while (iteration < maxIterations) {
+			print("\rIteration: " + iteration)
+			clusters = Map.empty.withDefaultValue(List.empty)
+			val distances = data.cartesian(sc.parallelize(currentCentroids)).map(pair => (pair._1, euclideanDistance(pair._1, pair._2)))
+			val closestCentroids = distances.reduceByKey((x, y) => math.min(x, y)).map(pair => (pair._1, currentCentroids(distances.filter(_._1 == pair._1).map(_._2).indexOf(pair._2))))
+			val clustersRDD = closestCentroids.groupByKey().mapValues(_.toList)
+			clusters = clustersRDD.collect().toMap
+			currentCentroids = clusters.keys.toList.map(centroid => {
+				val pointsInCluster = clusters(centroid)
+				(
+				  pointsInCluster.map(_._1).sum / pointsInCluster.length,
+				  pointsInCluster.map(_._2).sum / pointsInCluster.length
+				)
+			})
+			iteration += 1
+		}
+		currentCentroids.toArray
+
 
 	}
 
