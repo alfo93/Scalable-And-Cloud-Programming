@@ -23,7 +23,6 @@ object ElbowMethod extends clustering_alg {
         val dataWithFeatures = assembler.transform(data)
 
         // Evaluate clustering models for different values of k
-        //create array with 1...50 values
         val kValues = (2 to 50).toArray
         val evaluationScores = kValues.map { k =>
             val kmeans = new KMeans()

@@ -13,8 +13,11 @@ object KCenter extends clustering_alg {
 
         // read from trait clustering_alg
         val data = loadData(spark, file_path)
-        val clusters = kCenter(data, k)
-        printResults(clusters)
+        val start = System.nanoTime()
+        val clusters = kCenter_mr(data, k)
+        val end = System.nanoTime()
+
+        println("Time: " + (end - start) / 1e9d + "s\n")
         spark.stop()
     }
 

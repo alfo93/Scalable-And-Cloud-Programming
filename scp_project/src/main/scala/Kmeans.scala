@@ -16,9 +16,11 @@ object Kmeans extends clustering_alg {
 		  .getOrCreate()
 
 		val data = loadData(spark, file_path)
+		val start = System.nanoTime()
 		val centroids = initializeCentroids(k, data)
-		val clusters = kMeans_mr(data, centroids, maxIterations)
-		printResults(clusters)
+		val clusters = kMeans(data, centroids, maxIterations)
+		val end = System.nanoTime()
+		println("Time: " + (end - start) / 1e9d + "s\n")
 		spark.stop()
 	}
 
