@@ -9,9 +9,10 @@ object kmeans extends sequential.clustering_alg {
 		val random = new Random(42)
 		val spark = SparkSession.builder().appName("Sequential-KMeans").master("local[*]").getOrCreate()
 		spark.sparkContext.setLogLevel("ERROR")
+		println("\n\nSequential KMeans")
 		val data = loadData(spark).collect().toList
 		val start = System.nanoTime()
-		val bestK = elbowMethod(data, 2, 100, 10)
+		val bestK = elbowMethod(data, 2, 10, 50)
 		val end = System.nanoTime()
 		println("\nTime: " + (end - start) / 1e9d + "s\n")
 		println("Best K: " + bestK)

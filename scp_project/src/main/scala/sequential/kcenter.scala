@@ -7,6 +7,7 @@ import scala.util.Random
 object kcenter extends sequential.clustering_alg {
 	def main(args: Array[String]): Unit = {
 		val random = new Random(42)
+		println("Sequential KCenter")
 		val spark = SparkSession.builder().appName("Sequential-KCenter").master("local[*]").getOrCreate()
 		spark.sparkContext.setLogLevel("ERROR")
 		val data = loadData(spark).collect().toList
