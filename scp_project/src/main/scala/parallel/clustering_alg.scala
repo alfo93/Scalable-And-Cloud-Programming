@@ -13,6 +13,12 @@ trait clustering_alg {
 		sqrt(pow(p1._1 - p2._1, 2) + pow(p1._2 - p2._2, 2))
 	}
 
+	//closestCentroid is a helper function that takes a data point and a list of centroids,
+	// and returns the closest centroid to the data point based on Euclidean distance.
+	def closestCentroid(point: (Double, Double), centroids: Array[(Double, Double)]): (Double, Double) = {
+		centroids.minBy(centroid => euclideanDistance(point, centroid))
+	}
+
 	def loadData(spark: SparkSession): RDD[(Double, Double)] = {
 		spark.read.format("csv").option("header", "true").option("inferSchema", "true").load(file_path)
 		  .select("x", "y")
