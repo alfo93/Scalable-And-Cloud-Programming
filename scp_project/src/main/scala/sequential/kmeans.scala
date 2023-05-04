@@ -1,10 +1,9 @@
 package sequential
 
 import org.apache.spark.sql.SparkSession
-
 import scala.util.Random
 
-object kmeans extends sequential.clustering_alg {
+object kmeans extends scala.clustering_alg {
 	def main(args: Array[String]): Unit = {
 		val random = new Random(42)
 		val spark = SparkSession.builder().appName("Sequential-KMeans").master("local[*]").getOrCreate()
@@ -12,7 +11,7 @@ object kmeans extends sequential.clustering_alg {
 		println("\n\nSequential KMeans")
 		val data = loadData(spark).collect().toList
 		val start = System.nanoTime()
-		val bestK = elbowMethod(data, 2, 10, 50)
+		val bestK = elbowMethod(data, 2, 10, 10)
 		val end = System.nanoTime()
 		println("\nTime: " + (end - start) / 1e9d + "s\n")
 		println("Best K: " + bestK)

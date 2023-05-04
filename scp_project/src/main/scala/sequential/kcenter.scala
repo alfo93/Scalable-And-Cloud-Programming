@@ -1,10 +1,9 @@
 package sequential
 
 import org.apache.spark.sql.SparkSession
-
 import scala.util.Random
 
-object kcenter extends sequential.clustering_alg {
+object kcenter extends scala.clustering_alg {
 	def main(args: Array[String]): Unit = {
 		val random = new Random(42)
 		println("Sequential KCenter")
