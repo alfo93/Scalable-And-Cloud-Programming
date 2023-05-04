@@ -12,8 +12,9 @@ import scala.util.Random
 
 
 trait clustering_alg {
-	val file_path: String = "./src/resources/roma_xy.csv"
+	val file_path: String = "./src/resources/Umbria_xy.csv"
 	val random = new Random(42)
+	var results_by_k: mutable.Map[Int, Array[(Double,Double)]] = mutable.Map[Int, Array[(Double,Double)]]()
 
 	def euclideanDistance(p1: (Double, Double), p2: (Double, Double)): Double = {
 		sqrt(pow(p1._1 - p2._1, 2) + pow(p1._2 - p2._2, 2))
@@ -46,7 +47,7 @@ trait clustering_alg {
 	}
 
 
-	//closestCentroid is a helper function that takes a data point and a list of centroids,
+	// ClosestCentroid is a helper function that takes a data point and a list of centroids,
 	// and returns the closest centroid to the data point based on Euclidean distance.
 
 	// Closest centroid for List
@@ -70,11 +71,76 @@ trait clustering_alg {
 		  ._1
 	}
 
+	def save_cluster(k:Int, clusters: Array[(Double, Double)]): Unit = {
+		results_by_k += (k -> clusters)
+	}
+
+	def save_cluster_csv(data: List[(Double, Double)], path: String): Unit = {
+		print("\nSaving clusters...")
+		results_by_k.foreach(x => {
+			val k = x._1
+			val clusters = x._2
+			val clusters_data = data.map(point => {
+				val centroid = closestCentroid(point, clusters)
+				(point._1.toString + "," + point._2.toString + "," + centroid._1.toString + "," + centroid._2.toString)
+			})
+			val clusters_file = new java.io.PrintWriter(new java.io.File(path + k.toString + ".csv"))
+			clusters_data.foreach(clusters_file.println)
+			clusters_file.close()
+
+		})
+		print("OK\n")
+	}
+
 	def save_wcss(filename:String, ks: Range, wcss: Seq[Double]): Unit = {
+		print("Saving WCSS...")
 		val wcss_data = ks.zip(wcss).map(x => x._1.toString + "," + x._2.toString)
 		val wcss_file = new java.io.PrintWriter(new java.io.File(filename))
 		wcss_data.foreach(wcss_file.println)
 		wcss_file.close()
+		print("OK\n")
+	}
+
+	def save_run(filename: String, minK: Int, maxK: Int, bestK: Int, time: Double): Unit = {
+		print("Saving run...")
+		val run_data = minK.toString + "," + maxK.toString + ","  + bestK.toString + "," + time.toString
+		val run_file = new java.io.PrintWriter(new java.io.File(filename))
+		run_file.println(run_data)
+		run_file.close()
+		print("OK\n")
+	}
+
+
+	// Da testare
+	def elbowMethod(path: String, data: RDD[(Double, Double)], minK: Int, maxK: Int, clustering_function: (RDD[(Double, Double)], Int) => Array[(Double, Double)]): Unit = {
+		val ks = Range(minK, maxK + 1)
+
+		val start = System.nanoTime()
+		val wcss = ks.map(k => {
+			println(s"\nK: $k")
+			val centroids = initializeCentroids(k, data)
+			val clusterCentroids = clustering_function(data, k)
+			save_cluster(k, clusterCentroids)
+			val squaredErrors = data.map(point => {
+				val distances = clusterCentroids.map(centroid => euclideanDistance(point, centroid))
+				val minDistance = distances.min
+				minDistance * minDistance
+			})
+			squaredErrors.sum
+		})
+		val end = System.nanoTime()
+		print("\n\nTime: " + (end - start) / 1e9d + "s")
+
+		save_cluster_csv(data.collect().toList, path)
+		save_wcss(path + "_elbow.csv", ks, wcss)
+
+		val diff = wcss.zip(wcss.tail).map(pair => pair._2 - pair._1)
+		val bestK = ks(diff.indexOf(diff.max) + 1)
+		save_run(path + "_run.csv", minK, maxK, bestK, (end - start))
+
+		bestK
 	}
 
 }
+
+

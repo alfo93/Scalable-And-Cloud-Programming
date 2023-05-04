@@ -1,13 +1,8 @@
 package parallel
 
-import breeze.plot.{DomainFunction, Figure, plot}
-import org.apache.spark
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
-import parallel.kmeans.closestCentroid
-
 import scala.annotation.tailrec
-
 
 object kmeans extends scala.clustering_alg {
 	def main(args: Array[String]): Unit = {
@@ -15,15 +10,12 @@ object kmeans extends scala.clustering_alg {
 		spark.sparkContext.setLogLevel("ERROR")
 		println("\n\nParallel KMeans ")
 		val data = loadData(spark)
-		val start = System.nanoTime()
-		val bestK = elbowMethod(data, 2, 10, 10)
-		val end = System.nanoTime()
-		println("\nTime: " + (end - start) / 1e9d + "s\n")
+		val bestK = elbowMethod(data, 2, 10, 100)
 		println("Best K: " + bestK)
 		spark.stop()
 	}
 
-	def kMeans1(data: RDD[(Double, Double)], centroids: RDD[(Double, Double)], maxIterations: Int): Array[(Double, Double)] = {
+	private def kMeans1(data: RDD[(Double, Double)], centroids: RDD[(Double, Double)], maxIterations: Int): Array[(Double, Double)] = {
 		var currentCentroids = centroids.collect()
 		var K = centroids.count().toInt
 
@@ -54,7 +46,7 @@ object kmeans extends scala.clustering_alg {
 		currentCentroids
 	}
 
-	def kMeans2(data: RDD[(Double, Double)], centroids: RDD[(Double, Double)], maxIterations: Int): Array[(Double, Double)] = {
+	private def kMeans2(data: RDD[(Double, Double)], centroids: RDD[(Double, Double)], maxIterations: Int): Array[(Double, Double)] = {
 		var currentCentroids = centroids.collect().toList
 		val K = centroids.count().toInt
 
@@ -86,10 +78,11 @@ object kmeans extends scala.clustering_alg {
 		currentCentroids.toArray
 	}
 
-	def kMeans3(data: RDD[(Double, Double)], centroids: RDD[(Double, Double)], maxIterations: Int): Array[(Double, Double)] = {
-		var currentCentroids = centroids.collect().toList
+	private def kMeans3(data: RDD[(Double, Double)], centroids: RDD[(Double, Double)], maxIterations: Int): Array[(Double, Double)] = {
+		val currentCentroids = centroids.collect().toList
 		val K = centroids.count().toInt
 
+		@tailrec
 		def kMeansIteration(data: RDD[(Double, Double)], centroids: List[(Double, Double)], iteration: Int): List[(Double, Double)] = {
 			if (iteration >= maxIterations) {
 				centroids
@@ -124,14 +117,15 @@ object kmeans extends scala.clustering_alg {
 
 
 
-
-
 	def elbowMethod(data: RDD[(Double, Double)], minK: Int, maxK: Int, maxIterations: Int): Int = {
 		val ks = Range(minK, maxK + 1)
+
+		val start = System.nanoTime()
 		val wcss = ks.map(k => {
 			println(s"\nK: $k")
 			val centroids = initializeCentroids(k, data)
 			val clusterCentroids = kMeans3(data, centroids, maxIterations)
+			save_cluster(k, clusterCentroids)
 			val squaredErrors = data.map(point => {
 				val distances = clusterCentroids.map(centroid => euclideanDistance(point, centroid))
 				val minDistance = distances.min
@@ -139,8 +133,16 @@ object kmeans extends scala.clustering_alg {
 			})
 			squaredErrors.sum
 		})
+		val end = System.nanoTime()
+		print("\n\nTime: " + (end - start) / 1e9d + "s")
+
+		save_cluster_csv(data.collect().toList, "./src/resources/parallels/kmeans_")
 		save_wcss("./src/resources/parallels/kmeans_elbow.csv", ks, wcss)
+
 		val diff = wcss.zip(wcss.tail).map(pair => pair._2 - pair._1)
-		ks(diff.indexOf(diff.max) + 1)
+		val bestK = ks(diff.indexOf(diff.max) + 1)
+		save_run("./src/resources/parallels/kmeans_run.csv", minK, maxK, maxIterations, bestK, (end - start))
+
+		bestK
 	}
 }

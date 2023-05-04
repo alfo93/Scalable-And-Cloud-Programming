@@ -4,15 +4,15 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 
 object kcenter extends scala.clustering_alg {
-    val spark = SparkSession.builder().appName("PARALLEL-KCenter").master("local[*]").getOrCreate()
+    val spark = SparkSession.builder().appName("Parallel-KCenter").master("local[*]").getOrCreate()
+
     def main(args: Array[String]): Unit = {
 
         spark.sparkContext.setLogLevel("ERROR")
         val data = loadData(spark)
         val start = System.nanoTime()
-        val bestK = elbowMethod(data,  2, 10)
+        val bestK = elbowMethod(data, 2, 10)
         val end = System.nanoTime()
-        println("\nTime: " + (end - start) / 1e9d + "s\n")
         println(s"Best K: $bestK")
         spark.stop()
     }
@@ -60,12 +60,15 @@ object kcenter extends scala.clustering_alg {
         // Convert the centers list to an array and return it
         centers.reverse.toArray
     }
+
     def elbowMethod(data: RDD[(Double, Double)], minK: Int, maxK: Int): Int = {
         val ks = Range(minK, maxK + 1)
+        val start = System.nanoTime()
         val wcss = ks.map(k => {
             println(s"\nK: $k")
             val centroids = initializeCentroids(k, data)
             val clusterCentroids = kCenter(data, centroids)
+            save_cluster(k, clusterCentroids)
             val squaredErrors = data.map(point => {
                 val distances = clusterCentroids.map(centroid => euclideanDistance(point, centroid))
                 val minDistance = distances.min
@@ -73,9 +76,17 @@ object kcenter extends scala.clustering_alg {
             })
             squaredErrors.sum
         })
+        val end = System.nanoTime()
+        val time = end - start
+        print("\n\nTime: " + (end - start) / 1e9d + "s")
+
+        save_cluster_csv(data.collect().toList, "./src/resources/parallels/kcenter_")
+        save_wcss("./src/resources/parallels/kcenter_elbow.csv", ks, wcss)
 
         val diff = wcss.zip(wcss.tail).map(pair => pair._2 - pair._1)
-        ks(diff.indexOf(diff.max) + 1)
+        val bestK = ks(diff.indexOf(diff.max) + 1)
+        save_run("./src/resources/sequential/kcenter_run.csv", minK, maxK, bestK, time)
+        bestK
     }
 
 }
