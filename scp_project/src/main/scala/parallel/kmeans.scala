@@ -141,7 +141,7 @@ object kmeans extends scala.clustering_alg {
 
 		val diff = wcss.zip(wcss.tail).map(pair => pair._2 - pair._1)
 		val bestK = ks(diff.indexOf(diff.max) + 1)
-		save_run("./src/resources/parallels/kmeans_run.csv", minK, maxK, maxIterations, bestK, (end - start))
+		save_run("./src/resources/parallels/kmeans_run.csv", minK, maxK, bestK, (end - start) / 1e9d)
 
 		bestK
 	}

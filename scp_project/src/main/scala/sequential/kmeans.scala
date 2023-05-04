@@ -2,7 +2,10 @@ package sequential
 
 import org.apache.spark.sql.SparkSession
 
+import scala.util.Random
+
 object kmeans extends scala.clustering_alg {
+
 	def main(args: Array[String]): Unit = {
 		val spark = SparkSession.builder().appName("Sequential-KMeans").master("local[*]").getOrCreate()
 		spark.sparkContext.setLogLevel("ERROR")
@@ -63,7 +66,7 @@ object kmeans extends scala.clustering_alg {
 		save_wcss("./src/resources/sequential/kmeans_elbow.csv", ks, wcss)
 		val diff = wcss.zip(wcss.tail).map(pair => pair._2 - pair._1)
 		val bestK = ks(diff.indexOf(diff.max) + 1)
-		save_run("./src/resources/sequential/kmeans_run.csv", minK, maxK, maxIterations, bestK, time)
+		save_run("./src/resources/sequential/kmeans_run.csv", minK, maxK, bestK, time)
 
 		bestK
 	}
