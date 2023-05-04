@@ -11,7 +11,7 @@ object kcenter extends scala.clustering_alg {
 		spark.sparkContext.setLogLevel("ERROR")
 		val data = loadData(spark).collect().toList
 		val start = System.nanoTime()
-		val bestK = elbowMethod(data, 2, 100)
+		val bestK = elbowMethod(data, 2, 10)
 		val end = System.nanoTime()
 		println("Time: " + (end - start) / 1e9d + "s\n")
 		println("Best K: " + bestK)

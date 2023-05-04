@@ -19,7 +19,6 @@ trait clustering_alg {
 		sqrt(pow(p1._1 - p2._1, 2) + pow(p1._2 - p2._2, 2))
 	}
 
-
 	def loadData(spark: SparkSession): RDD[(Double, Double)] = {
 		print("Loading data...")
 		val res = spark.read.format("csv").option("header", "true").option("inferSchema", "true").load(file_path)
