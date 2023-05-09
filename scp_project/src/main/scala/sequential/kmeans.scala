@@ -2,8 +2,6 @@ package sequential
 
 import org.apache.spark.sql.SparkSession
 
-import scala.util.Random
-
 object kmeans extends scala.clustering_alg {
 
 	def main(args: Array[String]): Unit = {
@@ -11,7 +9,7 @@ object kmeans extends scala.clustering_alg {
 		spark.sparkContext.setLogLevel("ERROR")
 		println("\n\nSequential KMeans ")
 		val data = loadData(spark).collect().toList
-		val bestK = elbowMethod(data, 2, 10, 10)
+		val bestK = elbowMethod(data, 2, 10, 100)
 		println("Best K: " + bestK)
 		spark.stop()
 	}

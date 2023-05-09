@@ -15,9 +15,9 @@ object kmeans extends scala.clustering_alg {
 		spark.stop()
 	}
 
-	private def kMeans1(data: RDD[(Double, Double)], centroids: RDD[(Double, Double)], maxIterations: Int): Array[(Double, Double)] = {
-		var currentCentroids = centroids.collect()
-		var K = centroids.count().toInt
+	private def kMeans1(data: RDD[(Double, Double)], centroids: List[(Double, Double)], maxIterations: Int): List[(Double, Double)] = {
+		var currentCentroids = centroids
+		var K = centroids.length
 
 		for (i <- 1 to maxIterations) {
 			print("\rIteration: " + i)
@@ -40,15 +40,15 @@ object kmeans extends scala.clustering_alg {
 			  .values
 			  .collect()
 
-			currentCentroids = newCentroids
+			currentCentroids = newCentroids.toList
 		}
 
 		currentCentroids
 	}
 
-	private def kMeans2(data: RDD[(Double, Double)], centroids: RDD[(Double, Double)], maxIterations: Int): Array[(Double, Double)] = {
-		var currentCentroids = centroids.collect().toList
-		val K = centroids.count().toInt
+	private def kMeans2(data: RDD[(Double, Double)], centroids: List[(Double, Double)], maxIterations: Int): Array[(Double, Double)] = {
+		var currentCentroids = centroids
+		val K = centroids.length
 
 		for (i <- 1 to maxIterations) {
 			print("\rIteration: " + i)
@@ -78,9 +78,9 @@ object kmeans extends scala.clustering_alg {
 		currentCentroids.toArray
 	}
 
-	private def kMeans3(data: RDD[(Double, Double)], centroids: RDD[(Double, Double)], maxIterations: Int): Array[(Double, Double)] = {
-		val currentCentroids = centroids.collect().toList
-		val K = centroids.count().toInt
+	private def kMeans3(data: RDD[(Double, Double)], centroids: List[(Double, Double)], maxIterations: Int): Array[(Double, Double)] = {
+		val currentCentroids = centroids
+		//val K = centroids.length
 
 		@tailrec
 		def kMeansIteration(data: RDD[(Double, Double)], centroids: List[(Double, Double)], iteration: Int): List[(Double, Double)] = {

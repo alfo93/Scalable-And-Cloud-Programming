@@ -1,20 +1,21 @@
 package scala
+
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.rdd.RDD
-
-import java.awt.{Color, Dimension}
-import javax.swing.JFrame
+import scala.annotation.unused
 import scala.collection.mutable
-import scala.collection.mutable.ArrayBuffer
 import scala.math.{pow, sqrt}
 import scala.util.Random
 
-
-
 trait clustering_alg {
-	val file_path: String = "./src/resources/Umbria_xy.csv"
-	val random = new Random(42)
-	var results_by_k: mutable.Map[Int, Array[(Double,Double)]] = mutable.Map[Int, Array[(Double,Double)]]()
+	@unused
+	private val random = new Random(42)
+	private val file_path: String = "./src/resources/Umbria_xy.csv"
+	private val results_by_k: mutable.Map[Int, Array[(Double,Double)]] = mutable.Map[Int, Array[(Double,Double)]]()
+
+	def get_file_name: String = {
+		file_path.split("/").last.split("\\.").head
+	}
 
 	def euclideanDistance(p1: (Double, Double), p2: (Double, Double)): Double = {
 		sqrt(pow(p1._1 - p2._1, 2) + pow(p1._2 - p2._2, 2))
@@ -31,19 +32,29 @@ trait clustering_alg {
 		res
 	}
 
+	/*
 	def initializeCentroids(k: Int, data: RDD[(Double, Double)]): RDD[(Double, Double)] = {
 		val xCoords = data.map(_._1)
 		val yCoords = data.map(_._2)
 		val xRange = xCoords.max - xCoords.min
 		val yRange = yCoords.max - yCoords.min
 		val centroids = data.sparkContext.parallelize(
-			for (i <- 1 to k) yield {
+			for (_ <- 1 to k) yield {
 				val x = xCoords.min() + (xRange * Random.nextDouble)
 				val y = yCoords.min() + (yRange * Random.nextDouble)
 				(x, y)
 			}
 		)
 		centroids
+	}*/
+
+	def initializeCentroids(k: Int, data: List[(Double, Double)]): List[(Double, Double)] = {
+		scala.util.Random.shuffle(data).take(k)
+	}
+
+	def initializeCentroids(k: Int, data: RDD[(Double, Double)]): List[(Double, Double)] = {
+		// Randomly sample k points from the data
+		data.takeSample(withReplacement = false, k, System.nanoTime().toInt).toList
 	}
 
 
@@ -82,7 +93,7 @@ trait clustering_alg {
 			val clusters = x._2
 			val clusters_data = data.map(point => {
 				val centroid = closestCentroid(point, clusters)
-				(point._1.toString + "," + point._2.toString + "," + centroid._1.toString + "," + centroid._2.toString)
+				point._1.toString + "," + point._2.toString + "," + centroid._1.toString + "," + centroid._2.toString
 			})
 			val clusters_file = new java.io.PrintWriter(new java.io.File(path + k.toString + ".csv"))
 			clusters_data.foreach(clusters_file.println)
@@ -110,16 +121,18 @@ trait clustering_alg {
 		print("OK\n")
 	}
 
+	/* Da testare
+	def clustering_function(data: RDD[(Double, Double)], centroids: RDD[(Double, Double)]): Array[(Double, Double)]
+	def clustering_function(data: List[(Double, Double)], centroids: List[(Double, Double)]): Array[(Double, Double)]
 
-	// Da testare
-	def elbowMethod(path: String, data: RDD[(Double, Double)], minK: Int, maxK: Int, clustering_function: (RDD[(Double, Double)], Int) => Array[(Double, Double)]): Unit = {
+	def elbowMethod(path: String, data: RDD[(Double, Double)], minK: Int, maxK: Int): Unit = {
 		val ks = Range(minK, maxK + 1)
 
 		val start = System.nanoTime()
 		val wcss = ks.map(k => {
 			println(s"\nK: $k")
 			val centroids = initializeCentroids(k, data)
-			val clusterCentroids = clustering_function(data, k)
+			val clusterCentroids = clustering_function(data, centroids)
 			save_cluster(k, clusterCentroids)
 			val squaredErrors = data.map(point => {
 				val distances = clusterCentroids.map(centroid => euclideanDistance(point, centroid))
@@ -136,10 +149,11 @@ trait clustering_alg {
 
 		val diff = wcss.zip(wcss.tail).map(pair => pair._2 - pair._1)
 		val bestK = ks(diff.indexOf(diff.max) + 1)
-		save_run(path + "_run.csv", minK, maxK, bestK, (end - start))
+		save_run(path + "_run.csv", minK, maxK, bestK, end - start)
 
 		bestK
 	}
+	*/
 
 }
 

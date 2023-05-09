@@ -1,23 +1,20 @@
 package sequential
 
 import org.apache.spark.sql.SparkSession
-import scala.util.Random
 
 object kcenter extends scala.clustering_alg {
 	def main(args: Array[String]): Unit = {
-		val random = new Random(42)
 		println("Sequential KCenter")
 		val spark = SparkSession.builder().appName("Sequential-KCenter").master("local[*]").getOrCreate()
 		spark.sparkContext.setLogLevel("ERROR")
 		val data = loadData(spark).collect().toList
-		val bestK = elbowMethod(data, 2, 10)
-		val end = System.nanoTime()
+		val bestK = elbowMethod(data, 2, 50)
 		println("Best K: " + bestK)
 		spark.stop()
 		bestK
 	}
 
-	def kCenter(data: List[(Double, Double)], centroids: List[(Double, Double)]): Array[(Double, Double)] = {
+	private def kCenter(data: List[(Double, Double)], centroids: List[(Double, Double)]): Array[(Double, Double)] = {
 		val clusters = new Array[(Double, Double)](centroids.length)
 
 		// Initialize the clusters with the centroids

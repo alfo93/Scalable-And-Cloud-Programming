@@ -4,15 +4,13 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 
 object kcenter extends scala.clustering_alg {
-    val spark = SparkSession.builder().appName("Parallel-KCenter").master("local[*]").getOrCreate()
 
     def main(args: Array[String]): Unit = {
 
+        val spark = SparkSession.builder().appName("Parallel-KCenter").master("local[*]").getOrCreate()
         spark.sparkContext.setLogLevel("ERROR")
         val data = loadData(spark)
-        val start = System.nanoTime()
-        val bestK = elbowMethod(data, 2, 10)
-        val end = System.nanoTime()
+        val bestK = elbowMethod(data, 2, 50)
         println(s"Best K: $bestK")
         spark.stop()
     }
@@ -35,15 +33,15 @@ object kcenter extends scala.clustering_alg {
     }
 
 
-    def kCenter2(data: RDD[(Double, Double)], centroids: RDD[(Double, Double)]): Array[(Double, Double)] = {
+    private def kCenter2(data: RDD[(Double, Double)], centroids: List[(Double, Double)]): Array[(Double, Double)] = {
         // Initialize the centers with the first centroid
-        var centers = List(centroids.first())
+        var centers = List(centroids.head)
 
         // Broadcast the centers to all worker nodes
-        var centersBroadcast = spark.sparkContext.broadcast(centers)
+        var centersBroadcast = data.sparkContext.broadcast(centers)
 
         // Loop until we have found all the centers
-        while (centers.length < centroids.count()) {
+        while (centers.length < centroids.length) {
             // Find the farthest point from the nearest center for each point
             val farthestPoint = data.map(point => (point, centersBroadcast.value.minBy(center => euclideanDistance(center, point))))
               .reduce((a, b) => if (euclideanDistance(a._1, a._2) > euclideanDistance(b._1, b._2)) a else b)
@@ -54,12 +52,14 @@ object kcenter extends scala.clustering_alg {
 
             // Update the broadcast variable with the new centers list
             centersBroadcast.unpersist()
-            centersBroadcast = spark.sparkContext.broadcast(centers)
+            centersBroadcast = data.sparkContext.broadcast(centers)
         }
 
         // Convert the centers list to an array and return it
         centers.reverse.toArray
     }
+
+
 
     def elbowMethod(data: RDD[(Double, Double)], minK: Int, maxK: Int): Int = {
         val ks = Range(minK, maxK + 1)
@@ -67,7 +67,7 @@ object kcenter extends scala.clustering_alg {
         val wcss = ks.map(k => {
             println(s"\nK: $k")
             val centroids = initializeCentroids(k, data)
-            val clusterCentroids = kCenter(data, centroids)
+            val clusterCentroids = kCenter2(data, centroids)
             save_cluster(k, clusterCentroids)
             val squaredErrors = data.map(point => {
                 val distances = clusterCentroids.map(centroid => euclideanDistance(point, centroid))
