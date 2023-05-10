@@ -1,9 +1,7 @@
-package density_based.parallel
+package density_based.sequential
+
 import density_based.DensityClustering
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.rdd.RDD
-
-import scala.collection.mutable
 object dbscan extends DensityClustering {
     def main(args: Array[String]): Unit = {
         val spark = SparkSession.builder().appName("Sequential-DBSCAN>").master("local[*]").getOrCreate()

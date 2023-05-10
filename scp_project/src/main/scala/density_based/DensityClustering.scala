@@ -21,6 +21,10 @@ trait DensityClustering {
         data.filter(distance(_, p) <= eps).toSet
     }
 
+    def getNeighbors(p: (Double, Double), data: RDD[(Double, Double)], eps: Double): RDD[(Double, Double)] = {
+        data.filter(distance(_, p) <= eps)
+    }
+
     def loadData(spark: SparkSession): RDD[(Double, Double)] = {
         print("Loading data...")
         val res = spark.read.format("csv").option("header", "true").option("inferSchema", "true").load(file_path)
