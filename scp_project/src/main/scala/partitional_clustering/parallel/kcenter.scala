@@ -1,26 +1,27 @@
-package parallel
+package partitional_clustering.parallel
 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
+import partitional_clustering.PartitionalClustering
 
-object kcenter extends scala.clustering_alg {
+object kcenter extends PartitionalClustering {
 
     def main(args: Array[String]): Unit = {
 
         val spark = SparkSession.builder().appName("Parallel-KCenter").master("local[*]").getOrCreate()
         spark.sparkContext.setLogLevel("ERROR")
         val data = loadData(spark)
-        val bestK = elbowMethod(data, 2, 50)
+        val bestK = elbowMethod(data, 10, 30)
         println(s"Best K: $bestK")
         spark.stop()
     }
 
 
-    def kCenter(data: RDD[(Double, Double)], centroids: RDD[(Double, Double)]): Array[(Double, Double)] = {
-        var centers = Array(centroids.first())
+    def kCenter(data: RDD[(Double, Double)], centroids: List[(Double, Double)]): Array[(Double, Double)] = {
+        var centers = List(centroids.head)
 
         // Find the farthest point from the nearest cluster for each point
-        for (i <- 1 until centroids.count().toInt) {
+        for (i <- 1 until centroids.length.toInt) {
             val farthestPoint = data
               .map(point => (point, centers.minBy(center => euclideanDistance(center, point))))
               .reduce((a, b) => if (euclideanDistance(a._1, a._2) > euclideanDistance(b._1, b._2)) a else b)
@@ -29,7 +30,7 @@ object kcenter extends scala.clustering_alg {
             centers = centers :+ farthestPoint
         }
 
-        centers
+        centers.toArray
     }
 
 
@@ -68,7 +69,7 @@ object kcenter extends scala.clustering_alg {
             println(s"\nK: $k")
             val centroids = initializeCentroids(k, data)
             val clusterCentroids = kCenter2(data, centroids)
-            save_cluster(k, clusterCentroids)
+            saveCluster(k, clusterCentroids)
             val squaredErrors = data.map(point => {
                 val distances = clusterCentroids.map(centroid => euclideanDistance(point, centroid))
                 val minDistance = distances.min
@@ -80,12 +81,12 @@ object kcenter extends scala.clustering_alg {
         val time = end - start
         print("\n\nTime: " + (end - start) / 1e9d + "s")
 
-        save_cluster_csv(data.collect().toList, "./src/resources/parallels/kcenter_")
-        save_wcss("./src/resources/parallels/kcenter_elbow.csv", ks, wcss)
+        saveClusterCsv(data.collect().toList, "./src/resources/parallels/kcenter_")
+        saveWcss("./src/resources/parallels/kcenter_elbow.csv", ks, wcss)
 
         val diff = wcss.zip(wcss.tail).map(pair => pair._2 - pair._1)
         val bestK = ks(diff.indexOf(diff.max) + 1)
-        save_run("./src/resources/sequential/kcenter_run.csv", minK, maxK, bestK, time)
+        saveRun("./src/resources/sequential/kcenter_run.csv", minK, maxK, bestK, time)
         bestK
     }
 

@@ -1,8 +1,9 @@
-package sequential
+package partitional_clustering.sequential
 
 import org.apache.spark.sql.SparkSession
+import partitional_clustering.PartitionalClustering
 
-object kmeans extends scala.clustering_alg {
+object kmeans extends PartitionalClustering {
 
 	def main(args: Array[String]): Unit = {
 		val spark = SparkSession.builder().appName("Sequential-KMeans").master("local[*]").getOrCreate()
@@ -48,7 +49,7 @@ object kmeans extends scala.clustering_alg {
 			println(s"\nK: $k")
 			val centroids = scala.util.Random.shuffle(data).take(k)
 			val clusterCentroids = kMeans(data, centroids, maxIterations)
-			save_cluster(k, clusterCentroids)
+			saveCluster(k, clusterCentroids)
 			val squaredErrors = data.map(point => {
 				val distances = clusterCentroids.map(centroid => euclideanDistance(point, centroid))
 				val minDistance = distances.min
@@ -60,11 +61,11 @@ object kmeans extends scala.clustering_alg {
 		val time = end - start
 		print("\n\nTime: " + (end - start) / 1e9d + "s")
 
-		save_cluster_csv(data, "./src/resources/sequential/kmeans_")
-		save_wcss("./src/resources/sequential/kmeans_elbow.csv", ks, wcss)
+		saveClusterCsv(data, "./src/resources/sequential/kmeans_")
+		saveWcss("./src/resources/sequential/kmeans_elbow.csv", ks, wcss)
 		val diff = wcss.zip(wcss.tail).map(pair => pair._2 - pair._1)
 		val bestK = ks(diff.indexOf(diff.max) + 1)
-		save_run("./src/resources/sequential/kmeans_run.csv", minK, maxK, bestK, time)
+		saveRun("./src/resources/sequential/kmeans_run.csv", minK, maxK, bestK, time)
 
 		bestK
 	}

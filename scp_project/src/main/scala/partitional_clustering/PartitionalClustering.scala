@@ -1,29 +1,28 @@
-package scala
+package partitional_clustering
 
-import org.apache.spark.sql.SparkSession
 import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.SparkSession
+
 import scala.annotation.unused
 import scala.collection.mutable
 import scala.math.{pow, sqrt}
 import scala.util.Random
 
-trait clustering_alg {
+trait PartitionalClustering {
 	@unused
 	private val random = new Random(42)
-	private val file_path: String = "./src/resources/Umbria_xy.csv"
-	private val results_by_k: mutable.Map[Int, Array[(Double,Double)]] = mutable.Map[Int, Array[(Double,Double)]]()
+	private val filePath: String = "./src/resources/roma_xy.csv"
+	private val resultsByK: mutable.Map[Int, Array[(Double,Double)]] = mutable.Map[Int, Array[(Double,Double)]]()
 
-	def get_file_name: String = {
-		file_path.split("/").last.split("\\.").head
-	}
+	def getFileName: String = filePath.split("/").last.split("\\.").head
 
-	def euclideanDistance(p1: (Double, Double), p2: (Double, Double)): Double = {
-		sqrt(pow(p1._1 - p2._1, 2) + pow(p1._2 - p2._2, 2))
-	}
+	// Euclidean distance between two points
+	def euclideanDistance(p1: (Double, Double), p2: (Double, Double)): Double = sqrt(pow(p1._1 - p2._1, 2) + pow(p1._2 - p2._2, 2))
 
+	// Load RDD from CSV file
 	def loadData(spark: SparkSession): RDD[(Double, Double)] = {
 		print("Loading data...")
-		val res = spark.read.format("csv").option("header", "true").option("inferSchema", "true").load(file_path)
+		val res = spark.read.format("csv").option("header", "true").option("inferSchema", "true").load(filePath)
 		  .select("x", "y")
 		  .rdd
 		  .map(row => (row.getDouble(0), row.getDouble(1)))
@@ -32,21 +31,6 @@ trait clustering_alg {
 		res
 	}
 
-	/*
-	def initializeCentroids(k: Int, data: RDD[(Double, Double)]): RDD[(Double, Double)] = {
-		val xCoords = data.map(_._1)
-		val yCoords = data.map(_._2)
-		val xRange = xCoords.max - xCoords.min
-		val yRange = yCoords.max - yCoords.min
-		val centroids = data.sparkContext.parallelize(
-			for (_ <- 1 to k) yield {
-				val x = xCoords.min() + (xRange * Random.nextDouble)
-				val y = yCoords.min() + (yRange * Random.nextDouble)
-				(x, y)
-			}
-		)
-		centroids
-	}*/
 
 	def initializeCentroids(k: Int, data: List[(Double, Double)]): List[(Double, Double)] = {
 		scala.util.Random.shuffle(data).take(k)
@@ -82,13 +66,11 @@ trait clustering_alg {
 		  ._1
 	}
 
-	def save_cluster(k:Int, clusters: Array[(Double, Double)]): Unit = {
-		results_by_k += (k -> clusters)
-	}
+	def saveCluster(k: Int, clusters: Array[(Double, Double)]): Unit = resultsByK += (k -> clusters)
 
-	def save_cluster_csv(data: List[(Double, Double)], path: String): Unit = {
+	def saveClusterCsv(data: List[(Double, Double)], path: String): Unit = {
 		print("\nSaving clusters...")
-		results_by_k.foreach(x => {
+		resultsByK.foreach(x => {
 			val k = x._1
 			val clusters = x._2
 			val clusters_data = data.map(point => {
@@ -103,7 +85,7 @@ trait clustering_alg {
 		print("OK\n")
 	}
 
-	def save_wcss(filename:String, ks: Range, wcss: Seq[Double]): Unit = {
+	def saveWcss(filename:String, ks: Range, wcss: Seq[Double]): Unit = {
 		print("Saving WCSS...")
 		val wcss_data = ks.zip(wcss).map(x => x._1.toString + "," + x._2.toString)
 		val wcss_file = new java.io.PrintWriter(new java.io.File(filename))
@@ -112,7 +94,7 @@ trait clustering_alg {
 		print("OK\n")
 	}
 
-	def save_run(filename: String, minK: Int, maxK: Int, bestK: Int, time: Double): Unit = {
+	def saveRun(filename: String, minK: Int, maxK: Int, bestK: Int, time: Double): Unit = {
 		print("Saving run...")
 		val run_data = minK.toString + "," + maxK.toString + ","  + bestK.toString + "," + time.toString
 		val run_file = new java.io.PrintWriter(new java.io.File(filename))
@@ -133,7 +115,7 @@ trait clustering_alg {
 			println(s"\nK: $k")
 			val centroids = initializeCentroids(k, data)
 			val clusterCentroids = clustering_function(data, centroids)
-			save_cluster(k, clusterCentroids)
+			saveCluster(k, clusterCentroids)
 			val squaredErrors = data.map(point => {
 				val distances = clusterCentroids.map(centroid => euclideanDistance(point, centroid))
 				val minDistance = distances.min
@@ -144,12 +126,12 @@ trait clustering_alg {
 		val end = System.nanoTime()
 		print("\n\nTime: " + (end - start) / 1e9d + "s")
 
-		save_cluster_csv(data.collect().toList, path)
-		save_wcss(path + "_elbow.csv", ks, wcss)
+		saveClusterCsv(data.collect().toList, path)
+		saveWcss(path + "_elbow.csv", ks, wcss)
 
 		val diff = wcss.zip(wcss.tail).map(pair => pair._2 - pair._1)
 		val bestK = ks(diff.indexOf(diff.max) + 1)
-		save_run(path + "_run.csv", minK, maxK, bestK, end - start)
+		saveRun(path + "_run.csv", minK, maxK, bestK, end - start)
 
 		bestK
 	}

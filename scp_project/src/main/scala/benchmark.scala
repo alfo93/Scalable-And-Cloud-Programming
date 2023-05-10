@@ -1,12 +1,13 @@
 import org.apache.spark.sql.SparkSession
 import org.threeten.extra.scale.UtcRules.system
-import parallel._
+import partitional_clustering.parallel.{kcenter, kmeans}
+import partitional_clustering.sequential
 
 object benchmark {
 	def main(args: Array[String]): Unit = {
-		parallel.kmeans.main(Array())
+		kmeans.main(Array())
 		sequential.kmeans.main(Array())
-		parallel.kcenter.main(Array())
+		kcenter.main(Array())
 		sequential.kcenter.main(Array())
 	}
 }

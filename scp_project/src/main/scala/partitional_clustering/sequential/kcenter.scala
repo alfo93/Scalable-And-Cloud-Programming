@@ -1,14 +1,15 @@
-package sequential
+package partitional_clustering.sequential
 
 import org.apache.spark.sql.SparkSession
+import partitional_clustering.PartitionalClustering
 
-object kcenter extends scala.clustering_alg {
+object kcenter extends PartitionalClustering {
 	def main(args: Array[String]): Unit = {
 		println("Sequential KCenter")
 		val spark = SparkSession.builder().appName("Sequential-KCenter").master("local[*]").getOrCreate()
 		spark.sparkContext.setLogLevel("ERROR")
 		val data = loadData(spark).collect().toList
-		val bestK = elbowMethod(data, 2, 50)
+		val bestK = elbowMethod(data, 10, 30)
 		println("Best K: " + bestK)
 		spark.stop()
 		bestK
@@ -37,7 +38,6 @@ object kcenter extends scala.clustering_alg {
 				clusters(nearestCluster) = (x, y)
 			}
 		}
-
 		clusters
 	}
 
@@ -48,7 +48,7 @@ object kcenter extends scala.clustering_alg {
 			println(s"K: $k")
 			val centroids = scala.util.Random.shuffle(data).take(k)
 			val clusterCentroids = kCenter(data, centroids)
-			save_cluster(k, clusterCentroids)
+			saveCluster(k, clusterCentroids)
 			val squaredErrors = data.map(point => {
 				val distances = clusterCentroids.map(centroid => euclideanDistance(point, centroid))
 				val minDistance = distances.min
@@ -60,12 +60,12 @@ object kcenter extends scala.clustering_alg {
 		val time = end - start
 		print("\n\nTime: " + (end - start) / 1e9d + "s")
 
-		save_cluster_csv(data, "./src/resources/sequential/kcenter_")
-		save_wcss("./src/resources/sequential/kcenter_elbow.csv", ks, wcss)
+		saveClusterCsv(data, "./src/resources/sequential/kcenter_")
+		saveWcss("./src/resources/sequential/kcenter_elbow.csv", ks, wcss)
 
 		val diff = wcss.zip(wcss.tail).map(pair => pair._2 - pair._1)
 		val bestK = ks(diff.indexOf(diff.max) + 1)
-		save_run("./src/resources/sequential/kcenter_run.csv", minK, maxK, bestK, time)
+		saveRun("./src/resources/sequential/kcenter_run.csv", minK, maxK, bestK, time)
 		bestK
 
 	}
