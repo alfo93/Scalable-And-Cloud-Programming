@@ -15,28 +15,38 @@ object kmeans extends PartitionalClustering {
 		spark.stop()
 	}
 
-	private def kMeans(data: List[(Double, Double)], centroids: List[(Double, Double)], maxIterations: Int): Array[(Double, Double)] = {
+	private def kMeans(data: List[(Double, Double)], centroids: List[(Double, Double)]): Array[(Double, Double)] = {
 		var currentCentroids = centroids
 		var iteration = 0
 		var clusters = Map.empty[(Double, Double), List[(Double, Double)]]
-		while (iteration < maxIterations) {
+		var isConverged = false
+
+		while (!isConverged) {
 			print("\rIteration: " + iteration)
 			clusters = Map.empty.withDefaultValue(List.empty)
+
 			for (point <- data) {
 				val distances = currentCentroids.map(centroid => euclideanDistance(point, centroid))
 				val minDistance = distances.min
 				val closestCentroid = currentCentroids(distances.indexOf(minDistance))
 				clusters += (closestCentroid -> (point :: clusters(closestCentroid)))
 			}
-			currentCentroids = clusters.keys.toList.map(centroid => {
+
+			val newCentroids = clusters.keys.toList.map(centroid => {
 				val pointsInCluster = clusters(centroid)
 				(
 				  pointsInCluster.map(_._1).sum / pointsInCluster.length,
 				  pointsInCluster.map(_._2).sum / pointsInCluster.length
 				)
 			})
+
+			// Check if the centroids have converged
+			isConverged = checkConvergence(currentCentroids, newCentroids)
+
+			currentCentroids = newCentroids
 			iteration += 1
 		}
+
 		currentCentroids.toArray
 	}
 
@@ -48,7 +58,7 @@ object kmeans extends PartitionalClustering {
 		val wcss = ks.map(k => {
 			println(s"\nK: $k")
 			val centroids = scala.util.Random.shuffle(data).take(k)
-			val clusterCentroids = kMeans(data, centroids, maxIterations)
+			val clusterCentroids = kMeans(data, centroids)
 			saveCluster(k, clusterCentroids)
 			val squaredErrors = data.map(point => {
 				val distances = clusterCentroids.map(centroid => euclideanDistance(point, centroid))

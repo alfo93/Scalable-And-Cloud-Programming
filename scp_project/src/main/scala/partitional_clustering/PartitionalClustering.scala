@@ -66,6 +66,17 @@ trait PartitionalClustering {
 		  ._1
 	}
 
+	// Function used to check convergence in fixed-point iteration
+	def checkConvergence(oldCentroids: List[(Double, Double)], newCentroids: List[(Double, Double)]): Boolean = {
+		val epsilon = 1e-6 // Define a small threshold for convergence
+
+		// Check if the distance between old and new centroids is below the threshold for all centroids
+		oldCentroids.zip(newCentroids).forall {
+			case ((oldX, oldY), (newX, newY)) =>
+				Math.sqrt(Math.pow(oldX - newX, 2) + Math.pow(oldY - newY, 2)) <= epsilon
+		}
+	}
+
 	def saveCluster(k: Int, clusters: Array[(Double, Double)]): Unit = resultsByK += (k -> clusters)
 
 	def saveClusterCsv(data: List[(Double, Double)], path: String): Unit = {

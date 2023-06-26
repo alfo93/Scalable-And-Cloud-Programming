@@ -84,15 +84,7 @@ object kmeans extends PartitionalClustering {
 		currentCentroids.toArray
 	}
 
-	private def checkConvergence(oldCentroids: List[(Double, Double)], newCentroids: List[(Double, Double)]): Boolean = {
-		val epsilon = 1e-6 // Define a small threshold for convergence
 
-		// Check if the distance between old and new centroids is below the threshold for all centroids
-		oldCentroids.zip(newCentroids).forall {
-			case ((oldX, oldY), (newX, newY)) =>
-				Math.sqrt(Math.pow(oldX - newX, 2) + Math.pow(oldY - newY, 2)) <= epsilon
-		}
-	}
 
 
 	private def kMeans3(data: RDD[(Double, Double)], centroids: List[(Double, Double)], maxIterations: Int): Array[(Double, Double)] = {
