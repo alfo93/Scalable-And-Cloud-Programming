@@ -48,13 +48,12 @@ object kmeans extends PartitionalClustering {
 		currentCentroids
 	}
 
-	private def kMeans2(data: RDD[(Double, Double)], centroids: List[(Double, Double)], maxIterations: Int): Array[(Double, Double)] = {
+	private def kMeans2(data: RDD[(Double, Double)], centroids: List[(Double, Double)]): Array[(Double, Double)] = {
 		var currentCentroids = centroids
 		val K = centroids.length
+		var isConverged = false
 
-		for (i <- 1 to maxIterations) {
-			print("\rIteration: " + i)
-
+		while (!isConverged) {
 			// Assign each data point to the closest centroid
 			val closestCentroids = data.mapPartitions(iter => {
 				val localCentroids = currentCentroids
@@ -75,10 +74,26 @@ object kmeans extends PartitionalClustering {
 			  .toList
 
 			closestCentroids.unpersist()
+
+			// Check if the centroids have converged
+			isConverged = checkConvergence(currentCentroids, newCentroids)
+
 			currentCentroids = newCentroids
 		}
+
 		currentCentroids.toArray
 	}
+
+	private def checkConvergence(oldCentroids: List[(Double, Double)], newCentroids: List[(Double, Double)]): Boolean = {
+		val epsilon = 1e-6 // Define a small threshold for convergence
+
+		// Check if the distance between old and new centroids is below the threshold for all centroids
+		oldCentroids.zip(newCentroids).forall {
+			case ((oldX, oldY), (newX, newY)) =>
+				Math.sqrt(Math.pow(oldX - newX, 2) + Math.pow(oldY - newY, 2)) <= epsilon
+		}
+	}
+
 
 	private def kMeans3(data: RDD[(Double, Double)], centroids: List[(Double, Double)], maxIterations: Int): Array[(Double, Double)] = {
 		val currentCentroids = centroids
@@ -126,7 +141,7 @@ object kmeans extends PartitionalClustering {
 		val wcss = ks.map(k => {
 			println(s"\nK: $k")
 			val centroids = initializeCentroids(k, data)
-			val clusterCentroids = kMeans3(data, centroids, maxIterations)
+			val clusterCentroids = kMeans2(data, centroids)
 			saveCluster(k, clusterCentroids)
 			val squaredErrors = data.map(point => {
 				val distances = clusterCentroids.map(centroid => euclideanDistance(point, centroid))
