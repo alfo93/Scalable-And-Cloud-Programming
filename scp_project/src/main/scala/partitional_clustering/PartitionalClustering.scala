@@ -2,19 +2,21 @@ package partitional_clustering
 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
-
-import scala.annotation.unused
 import scala.collection.mutable
 import scala.math.{pow, sqrt}
-import scala.util.Random
 
 trait PartitionalClustering {
-	@unused
-	private val random = new Random(42)
 	private val filePath: String = "./src/resources/roma_xy.csv"
 	private val resultsByK: mutable.Map[Int, Array[(Double,Double)]] = mutable.Map[Int, Array[(Double,Double)]]()
+	private val saveResults: Boolean = false
+	val kMin = 2
+	val kMax = 30
 
-	def getFileName: String = filePath.split("/").last.split("\\.").head
+	def getAlgorithmName: String = this.getClass.getSimpleName
+
+	def main(): (Int, Double)
+	def main(String: Array[String]): Unit = main()
+
 
 	// Euclidean distance between two points
 	def euclideanDistance(p1: (Double, Double), p2: (Double, Double)): Double = sqrt(pow(p1._1 - p2._1, 2) + pow(p1._2 - p2._2, 2))
@@ -31,7 +33,6 @@ trait PartitionalClustering {
 		res
 	}
 
-
 	def initializeCentroids(k: Int, data: List[(Double, Double)]): List[(Double, Double)] = {
 		scala.util.Random.shuffle(data).take(k)
 	}
@@ -40,7 +41,6 @@ trait PartitionalClustering {
 		// Randomly sample k points from the data
 		data.takeSample(withReplacement = false, k, System.nanoTime().toInt).toList
 	}
-
 
 	// ClosestCentroid is a helper function that takes a data point and a list of centroids,
 	// and returns the closest centroid to the data point based on Euclidean distance.
@@ -80,6 +80,8 @@ trait PartitionalClustering {
 	def saveCluster(k: Int, clusters: Array[(Double, Double)]): Unit = resultsByK += (k -> clusters)
 
 	def saveClusterCsv(data: List[(Double, Double)], path: String): Unit = {
+		if (!saveResults) return
+
 		print("\nSaving clusters...")
 		resultsByK.foreach(x => {
 			val k = x._1
@@ -97,6 +99,8 @@ trait PartitionalClustering {
 	}
 
 	def saveWcss(filename:String, ks: Range, wcss: Seq[Double]): Unit = {
+		if (!saveResults) return
+
 		print("Saving WCSS...")
 		val wcss_data = ks.zip(wcss).map(x => x._1.toString + "," + x._2.toString)
 		val wcss_file = new java.io.PrintWriter(new java.io.File(filename))
@@ -106,6 +110,8 @@ trait PartitionalClustering {
 	}
 
 	def saveRun(filename: String, minK: Int, maxK: Int, bestK: Int, time: Double): Unit = {
+		if (!saveResults) return
+
 		print("Saving run...")
 		val run_data = minK.toString + "," + maxK.toString + ","  + bestK.toString + "," + time.toString
 		val run_file = new java.io.PrintWriter(new java.io.File(filename))

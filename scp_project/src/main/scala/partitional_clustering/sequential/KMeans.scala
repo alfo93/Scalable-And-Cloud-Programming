@@ -3,16 +3,17 @@ package partitional_clustering.sequential
 import org.apache.spark.sql.SparkSession
 import partitional_clustering.PartitionalClustering
 
-object kmeans extends PartitionalClustering {
+object KMeans extends PartitionalClustering {
 
-	def main(args: Array[String]): Unit = {
+	def main(): (Int, Double) = {
 		val spark = SparkSession.builder().appName("Sequential-KMeans").master("local[*]").getOrCreate()
 		spark.sparkContext.setLogLevel("ERROR")
-		println("\n\nSequential KMeans ")
+		println("\nSequential KMeans ")
 		val data = loadData(spark).collect().toList
-		val bestK = elbowMethod(data, 2, 10, 100)
-		println("Best K: " + bestK)
+		val (bestK:Int, time:Double)  = elbowMethod(data, kMin, kMax)
+		println("\nBest K: " + bestK)
 		spark.stop()
+		(bestK, time)
 	}
 
 	private def kMeans(data: List[(Double, Double)], centroids: List[(Double, Double)]): Array[(Double, Double)] = {
@@ -50,13 +51,12 @@ object kmeans extends PartitionalClustering {
 		currentCentroids.toArray
 	}
 
-
-	def elbowMethod(data: List[(Double, Double)], minK: Int, maxK: Int, maxIterations: Int): Int = {
+	def elbowMethod(data: List[(Double, Double)], minK: Int, maxK: Int): (Int, Double) = {
 		val ks = Range(minK, maxK + 1)
 
 		val start = System.nanoTime()
 		val wcss = ks.map(k => {
-			println(s"\nK: $k")
+			print(s"K: $k\r")
 			val centroids = scala.util.Random.shuffle(data).take(k)
 			val clusterCentroids = kMeans(data, centroids)
 			saveCluster(k, clusterCentroids)
@@ -68,15 +68,16 @@ object kmeans extends PartitionalClustering {
 			squaredErrors.sum
 		})
 		val end = System.nanoTime()
-		val time = end - start
-		print("\n\nTime: " + (end - start) / 1e9d + "s")
+		val time = (end - start) / 1e9d
+		print("Time: " + time + "\n")
 
 		saveClusterCsv(data, "./src/resources/sequential/kmeans_")
 		saveWcss("./src/resources/sequential/kmeans_elbow.csv", ks, wcss)
+
 		val diff = wcss.zip(wcss.tail).map(pair => pair._2 - pair._1)
 		val bestK = ks(diff.indexOf(diff.max) + 1)
 		saveRun("./src/resources/sequential/kmeans_run.csv", minK, maxK, bestK, time)
 
-		bestK
+		(bestK, time)
 	}
 }

@@ -7,10 +7,8 @@ import scala.collection.mutable
 import scala.util.Random
 
 trait DensityClustering {
-
     private val random = new Random(42)
     private val file_path: String = "./src/resources/Umbria_xy.csv"
-    private val results_by_k: mutable.Map[Int, Array[(Double, Double)]] = mutable.Map[Int, Array[(Double, Double)]]()
 
     // Define a function to compute the distance between two data points
     def distance(p1: (Double, Double), p2: (Double, Double)): Double = {
@@ -20,10 +18,6 @@ trait DensityClustering {
     def getNeighbors(p: (Double, Double), data: List[(Double, Double)], eps: Double): Set[(Double, Double)] = {
         data.filter(distance(_, p) <= eps).toSet
     }
-
-
-
-
 
     def loadData(spark: SparkSession): RDD[(Double, Double)] = {
         print("Loading data...")
@@ -35,5 +29,4 @@ trait DensityClustering {
         print("OK\n")
         res
     }
-
 }
