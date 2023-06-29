@@ -4,9 +4,22 @@ import org.apache.spark.sql.SparkSession
 import partitional_clustering.PartitionalClustering
 
 object KMeans extends PartitionalClustering {
+	override var filePath: String = ""
 
-	def main(): (Int, Double) = {
-		val spark = SparkSession.builder().appName("Sequential-KMeans").master("local[*]").getOrCreate()
+	def main(args: Array[String]): (Int, Double) = {
+		// Check if the file path was provided
+		if (args.length != 1) {
+			println("Usage: KMeans <file path>")
+			System.exit(1)
+		}
+		filePath = args(0)
+
+		// Initialize Spark
+		val spark = SparkSession.builder()
+		  .appName("Sequential-KMeans")
+		  .master("local[*]")
+		  .config("spark.driver.maxResultSize", "2g")
+		  .getOrCreate()
 		spark.sparkContext.setLogLevel("ERROR")
 		println("\nSequential KMeans ")
 		val data = loadData(spark).collect().toList

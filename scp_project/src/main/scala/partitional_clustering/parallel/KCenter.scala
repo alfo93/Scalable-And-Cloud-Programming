@@ -5,9 +5,22 @@ import org.apache.spark.sql.SparkSession
 import partitional_clustering.PartitionalClustering
 
 object KCenter extends PartitionalClustering {
+	override var filePath: String = ""
 
-	def main(): (Int, Double) = {
-		val spark = SparkSession.builder().appName("Parallel-KCenter").master("local[*]").getOrCreate()
+	def main(args: Array[String]): (Int, Double) = {
+		// Check if the file path is provided
+		if (args.length != 1) {
+			println("Usage: KCenter <file path>")
+			System.exit(1)
+		}
+		filePath = args(0)
+
+		// Initialize Spark
+		val spark = SparkSession.builder()
+		  .appName("Parallel-KCenter")
+		  .master("local[*]")
+		  .config("spark.driver.maxResultSize", "2g")
+		  .getOrCreate()
 		spark.sparkContext.setLogLevel("ERROR")
 		println("\nParallel KCenter ")
 		val data = loadData(spark)
@@ -89,5 +102,6 @@ object KCenter extends PartitionalClustering {
 		saveRun("./src/resources/sequential/kcenter_run.csv", minK, maxK, bestK, time)
 		(bestK, time)
 	}
+
 
 }

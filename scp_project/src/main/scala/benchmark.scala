@@ -3,26 +3,26 @@ import partitional_clustering.sequential
 import partitional_clustering.PartitionalClustering
 
 object benchmark {
-	private val iters = 10
-	private val test_KMeans = true
+	private val iters = 3
+	private val test_KMeans = false
 	private val test_KCenter = true
 
-	def main(String: Array[String]): Unit = {
+	def main(args: Array[String]): Unit = {
 		if (test_KMeans) {
-			test_alg(parallel.KMeans)
-			test_alg(sequential.KMeans)
+			test_alg(parallel.KMeans, args)
+			test_alg(sequential.KMeans, args)
 		}
 
 		if (test_KCenter) {
-			test_alg(parallel.KCenter)
-			test_alg(sequential.KCenter)
+			test_alg(parallel.KCenter, args)
+			test_alg(sequential.KCenter, args)
 		}
 	}
 
-	private def test_alg(func: PartitionalClustering): Unit = {
+	private def test_alg(func: PartitionalClustering, filePath: Array[String]): Unit = {
 		val times = new Array[Double](iters)
 		for (i <- 0 until iters) {
-			val (_, time) = func.main()
+			val (_, time) = func.main(filePath)
 			times(i) = time
 		}
 

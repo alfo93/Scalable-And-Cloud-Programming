@@ -1,0 +1,21 @@
+[0m[[0m[0mdebug[0m] [0m[0mCreated transactional ClassFileManager with tempDir = /Users/fbartolucci/Documents/Git/scala/scp_project/target/scala-2.12/classes.bak[0m
+[0m[[0m[0mdebug[0m] [0m[0mAbout to delete class files:[0m
+[0m[[0m[0mdebug[0m] [0m[0mWe backup class files:[0m
+[0m[[0m[0mdebug[0m] [0m[0mRegistering generated classes:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	DensityClustering.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	dbscan$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	KCenter$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	dbscan.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	KCenter$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	dbscan.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	PartitionalClustering.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	benchmark.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	KMeans.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	KCenter.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	KMeans$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	KMeans$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	dbscan$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	KCenter.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	KMeans.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	benchmark$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0mRemoving the temporary directory used for backing up class files: /Users/fbartolucci/Documents/Git/scala/scp_project/target/scala-2.12/classes.bak[0m

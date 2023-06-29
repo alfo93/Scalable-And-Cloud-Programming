@@ -2,3 +2,4 @@ ita_general_2020.csv
 region_shape.geojson
 .ipynb_checkpoints
 *.csv
+spark/*

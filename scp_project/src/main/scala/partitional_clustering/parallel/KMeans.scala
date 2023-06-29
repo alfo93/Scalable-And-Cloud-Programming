@@ -5,8 +5,21 @@ import org.apache.spark.sql.SparkSession
 import partitional_clustering.PartitionalClustering
 
 object KMeans extends PartitionalClustering {
-	def main(): (Int, Double) = {
-		val spark = SparkSession.builder().appName("Parallel-KMeans").master("local[*]").getOrCreate()
+	override var filePath: String = ""
+
+	def main(args: Array[String]): (Int, Double) = {
+		// Check if the file path is provided
+		if (args.length != 1) {
+			println("Usage: KMeans <file path>")
+			System.exit(1)
+		}
+		filePath = args(0)
+
+		// Initialize Spark
+		val spark = SparkSession.builder()
+		  .appName("Parallel-KMeans")
+		  .master("local[*]")
+		  .getOrCreate()
 		spark.sparkContext.setLogLevel("ERROR")
 		println("\nParallel KMeans ")
 		val data = loadData(spark)

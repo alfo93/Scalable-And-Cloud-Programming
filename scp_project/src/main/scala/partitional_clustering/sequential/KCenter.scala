@@ -4,10 +4,25 @@ import org.apache.spark.sql.SparkSession
 import partitional_clustering.PartitionalClustering
 
 object KCenter extends PartitionalClustering {
-	def main(): (Int, Double) = {
+	override var filePath: String = ""
+
+	def main(args: Array[String]): (Int, Double) = {
+		// Check if the file path was provided
+		if (args.length != 1) {
+			println("Usage: KCenter <file path>")
+			System.exit(1)
+		}
+		filePath = args(0)
+
+		// Initialize Spark
 		println("\nSequential KCenter")
-		val spark = SparkSession.builder().appName("Sequential-KCenter").master("local[*]").getOrCreate()
+		val spark = SparkSession.builder()
+		  .appName("Sequential-KCenter")
+		  .master("local[*]")
+		  .config("spark.driver.maxResultSize", "2g")
+		  .getOrCreate()
 		spark.sparkContext.setLogLevel("ERROR")
+		println("\nSequential KCenter")
 		val data = loadData(spark).collect().toList
 		val (bestK: Int, time: Double) = elbowMethod(data, kMin, kMax)
 		println("\nBest K: " + bestK)

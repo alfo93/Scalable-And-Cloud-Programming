@@ -75,7 +75,4 @@ object dbscan extends DensityClustering {
 		data.filter(other => distance(other, point) <= eps).collect().toSet
 	}
 
-
-
-
 }

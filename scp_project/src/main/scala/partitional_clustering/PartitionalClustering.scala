@@ -6,17 +6,15 @@ import scala.collection.mutable
 import scala.math.{pow, sqrt}
 
 trait PartitionalClustering {
-	private val filePath: String = "./src/resources/roma_xy.csv"
+	var filePath: String
 	private val resultsByK: mutable.Map[Int, Array[(Double,Double)]] = mutable.Map[Int, Array[(Double,Double)]]()
 	private val saveResults: Boolean = false
 	val kMin = 2
-	val kMax = 30
+	val kMax = 4
 
+	def main(args: Array[String]): (Int, Double)
+	
 	def getAlgorithmName: String = this.getClass.getSimpleName
-
-	def main(): (Int, Double)
-	def main(String: Array[String]): Unit = main()
-
 
 	// Euclidean distance between two points
 	def euclideanDistance(p1: (Double, Double), p2: (Double, Double)): Double = sqrt(pow(p1._1 - p2._1, 2) + pow(p1._2 - p2._2, 2))
@@ -120,10 +118,9 @@ trait PartitionalClustering {
 		print("OK\n")
 	}
 
-	/* Da testare
-	def clustering_function(data: RDD[(Double, Double)], centroids: RDD[(Double, Double)]): Array[(Double, Double)]
-	def clustering_function(data: List[(Double, Double)], centroids: List[(Double, Double)]): Array[(Double, Double)]
 
+
+	/*
 	def elbowMethod(path: String, data: RDD[(Double, Double)], minK: Int, maxK: Int): Unit = {
 		val ks = Range(minK, maxK + 1)
 
@@ -131,7 +128,7 @@ trait PartitionalClustering {
 		val wcss = ks.map(k => {
 			println(s"\nK: $k")
 			val centroids = initializeCentroids(k, data)
-			val clusterCentroids = clustering_function(data, centroids)
+			val clusterCentroids = clustering_function(data: RDD[(Double,Double)], centroids: )
 			saveCluster(k, clusterCentroids)
 			val squaredErrors = data.map(point => {
 				val distances = clusterCentroids.map(centroid => euclideanDistance(point, centroid))
@@ -152,7 +149,9 @@ trait PartitionalClustering {
 
 		bestK
 	}
+
 	*/
+
 
 }
 
