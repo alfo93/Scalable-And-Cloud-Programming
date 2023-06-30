@@ -13,12 +13,13 @@ object KCenter extends PartitionalClustering {
 			println("Usage: KCenter <file path>")
 			System.exit(1)
 		}
-		filePath = args(0)
 
+		filePath = args(0)
 		// Initialize Spark
 		val spark = SparkSession.builder()
 		  .appName("Parallel-KCenter")
 		  .master("local[*]")
+		  .config("spark.executor.cores", "2")
 		  .config("spark.driver.maxResultSize", "2g")
 		  .getOrCreate()
 		spark.sparkContext.setLogLevel("ERROR")

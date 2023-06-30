@@ -9,8 +9,8 @@ trait PartitionalClustering {
 	var filePath: String
 	private val resultsByK: mutable.Map[Int, Array[(Double,Double)]] = mutable.Map[Int, Array[(Double,Double)]]()
 	private val saveResults: Boolean = false
-	val kMin = 2
-	val kMax = 4
+	val kMin = 5
+	val kMax = 20
 
 	def main(args: Array[String]): (Int, Double)
 	

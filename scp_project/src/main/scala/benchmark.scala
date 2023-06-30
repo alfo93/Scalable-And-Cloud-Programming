@@ -3,18 +3,18 @@ import partitional_clustering.sequential
 import partitional_clustering.PartitionalClustering
 
 object benchmark {
-	private val iters = 3
-	private val test_KMeans = false
-	private val test_KCenter = true
+	private val iters = 10
+	private val test_Sequential = true
+	private val test_Parallel = false
 
 	def main(args: Array[String]): Unit = {
-		if (test_KMeans) {
+		if (test_Parallel) {
 			test_alg(parallel.KMeans, args)
-			test_alg(sequential.KMeans, args)
+			test_alg(parallel.KCenter, args)
 		}
 
-		if (test_KCenter) {
-			test_alg(parallel.KCenter, args)
+		if (test_Sequential) {
+			test_alg(sequential.KMeans, args)
 			test_alg(sequential.KCenter, args)
 		}
 	}

@@ -24,7 +24,7 @@ object KMeans extends PartitionalClustering {
 		println("\nSequential KMeans ")
 		val data = loadData(spark).collect().toList
 		val (bestK:Int, time:Double)  = elbowMethod(data, kMin, kMax)
-		println("\nBest K: " + bestK)
+		print("Best K: " + bestK)
 		spark.stop()
 		(bestK, time)
 	}
@@ -36,7 +36,7 @@ object KMeans extends PartitionalClustering {
 		var isConverged = false
 
 		while (!isConverged) {
-			print("\rIteration: " + iteration)
+			//print("\rIteration: " + iteration)
 			clusters = Map.empty.withDefaultValue(List.empty)
 
 			for (point <- data) {
@@ -80,6 +80,7 @@ object KMeans extends PartitionalClustering {
 			})
 			squaredErrors.sum
 		})
+
 		val end = System.nanoTime()
 		val time = (end - start) / 1e9d
 		print("Time: " + time + "\n")
