@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 ["sbt.Task[scala.collection.Seq[java.nio.file.Path]]",["/Users/fbartolucci/Documents/Git/scala/target/scala-2.12/zinc/inc_compile_2.12.zip"]]
+=======
+["sbt.Task[scala.collection.Seq[java.nio.file.Path]]",["/Users/alfo/ProgettiUnibo/scala/target/scala-2.12/zinc/inc_compile_2.12.zip"]]
+>>>>>>> e636bac (aosta in prepare data)

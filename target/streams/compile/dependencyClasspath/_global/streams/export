@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 /Users/fbartolucci/.sbt/boot/scala-2.12.18/lib/scala-library.jar
+=======
+/Users/alfo/.sbt/boot/scala-2.12.18/lib/scala-library.jar
+>>>>>>> e636bac (aosta in prepare data)
