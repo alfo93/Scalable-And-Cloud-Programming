@@ -1,5 +1,7 @@
 ita_general_2020.csv
 region_shape.geojson
 .ipynb_checkpoints
-*.csv
+/scp_project/src/resources/italy.csv
+/scp_project/src/resources/*.csv
+
 spark/*

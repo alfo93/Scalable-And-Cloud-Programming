@@ -9,7 +9,7 @@ object benchmark {
 
 	def main(args: Array[String]): Unit = {
 		if (test_Parallel) {
-			test_alg(parallel.KMeans, args)
+			//test_alg(parallel.KMeans, args)
 			test_alg(parallel.KCenter, args)
 		}
 
