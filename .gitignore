@@ -3,5 +3,5 @@ region_shape.geojson
 .ipynb_checkpoints
 /scp_project/src/resources/italy.csv
 /scp_project/src/resources/*.csv
-
+*.png
 spark/*
