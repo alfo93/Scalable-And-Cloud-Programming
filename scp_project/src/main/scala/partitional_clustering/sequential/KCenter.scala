@@ -61,8 +61,8 @@ object KCenter extends PartitionalClustering {
 			})
 
 			// Check if the centroids have converged
-			isConverged = checkConvergence(
-			println(f"iteration: ${iteration}")
+			isConverged = checkConvergence(data, currentCentroids, newCentroids)
+		
 			currentCentroids = newCentroids
 			iteration += 1
 		}

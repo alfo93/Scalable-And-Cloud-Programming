@@ -75,6 +75,17 @@ trait PartitionalClustering {
 		}
 	}
 
+	def checkConvergence(data: List[(Double, Double)], centroids: List[(Double, Double)], newCentroids: List[(Double, Double)]): Boolean = {
+		val threshold = 1e-6
+		// Calculate the maximum distance between data points and the closest centroids for the current and new centroids
+		val maxDistanceOld = data.map(point => centroids.map(centroid => euclideanDistance(point, centroid)).min).max
+		val maxDistanceNew = data.map(point => newCentroids.map(centroid => euclideanDistance(point, centroid)).min).max
+
+		// Check if the maximum distance change between the old and new centroids is below the threshold
+		Math.abs(maxDistanceOld - maxDistanceNew) <= threshold
+	}
+
+
 	def saveCluster(k: Int, clusters: Array[(Double, Double)]): Unit = resultsByK += (k -> clusters)
 
 	def saveClusterCsv(data: List[(Double, Double)], path: String): Unit = {
