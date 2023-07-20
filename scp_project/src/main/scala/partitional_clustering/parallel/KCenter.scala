@@ -31,49 +31,53 @@ object KCenter extends PartitionalClustering {
 		(bestK, time)
 	}
 
-	def kCenter(data: RDD[(Double, Double)], centroids: List[(Double, Double)]): Array[(Double, Double)] = {
-		var centers = List(centroids.head)
-
-		// Find the farthest point from the nearest cluster for each point
-		for (_ <- 1 until centroids.length) {
-			val farthestPoint = data
-			  .map(point => (point, centers.minBy(center => euclideanDistance(center, point))))
-			  .reduce((a, b) => if (euclideanDistance(a._1, a._2) > euclideanDistance(b._1, b._2)) a else b)
-			  ._1
-
-			centers = centers :+ farthestPoint
+	private def getMaxDistance(oldCentroids: RDD[(Double, Double)], newCentroids: RDD[(Double, Double)]): Double = {
+		val distances = oldCentroids.zipPartitions(newCentroids) { (iter1, iter2) =>
+			iter1.zip(iter2).map { case ((x1, y1), (x2, y2)) =>
+				euclideanDistance((x1, y1), (x2, y2))
+			}
 		}
-
-		centers.toArray
+		distances.max()
 	}
 
+	private def kCenter(data: RDD[(Double, Double)], centroids: List[(Double, Double)]): Array[(Double, Double)] = {
+		var currentCentroids = data.sparkContext.parallelize(centroids)
+		val K = centroids.length
+		var maxDistanceChange = Double.MaxValue
 
-	private def kCenter2(data: RDD[(Double, Double)], centroids: List[(Double, Double)]): Array[(Double, Double)] = {
-		// Initialize the centers with the first centroid
-		var centers = List(centroids.head)
+		val threshold = 1e-6
+		var iteration = 0
 
-		// Broadcast the centers to all worker nodes
-		var centersBroadcast = data.sparkContext.broadcast(centers)
+		while (maxDistanceChange > threshold && iteration < 200) {
+			// Broadcast the current centroids to all worker nodes
+			val broadcastCentroids = data.sparkContext.broadcast(currentCentroids.collect())
 
-		// Loop until we have found all the centers
-		while (centers.length < centroids.length) {
-			// Find the farthest point from the nearest center for each point
-			val farthestPoint = data.map(point => (point, centersBroadcast.value.minBy(center => euclideanDistance(center, point))))
-			  .reduce((a, b) => if (euclideanDistance(a._1, a._2) > euclideanDistance(b._1, b._2)) a else b)
-			  ._1
+			// Assign each data point to the closest centroid
+			val closestCentroids = data.mapPartitions(iter => {
+				val localCentroids = broadcastCentroids.value
+				iter.map(point => (closestCentroid(point, localCentroids), point))
+			}).persist()
 
-			// Add the farthest point to the centers list
-			centers = farthestPoint :: centers
+			// Calculate the mean of all points assigned to each centroid and set it as the new centroid
+			val newCentroids = closestCentroids
+			  .aggregateByKey((0.0, 0.0, 0))(
+				  (acc, point) => (acc._1 + point._1, acc._2 + point._2, acc._3 + 1),
+				  (acc1, acc2) => (acc1._1 + acc2._1, acc1._2 + acc2._2, acc1._3 + acc2._3)
+			  )
+			  .mapValues { case (sumX, sumY, count) => (sumX / count, sumY / count) }
+			  .values
+			  .repartition(currentCentroids.getNumPartitions) // Repartition to match the number of partitions of currentCentroids
 
-			// Update the broadcast variable with the new centers list
-			centersBroadcast.unpersist()
-			centersBroadcast = data.sparkContext.broadcast(centers)
+			closestCentroids.unpersist()
+
+			// Calculate the maximum distance change between the old and new centroids
+			maxDistanceChange = getMaxDistance(currentCentroids, newCentroids)
+			currentCentroids = newCentroids
+			iteration += 1
 		}
 
-		// Convert the centers list to an array and return it
-		centers.reverse.toArray
+		currentCentroids.collect()
 	}
-
 
 
 	def elbowMethod(data: RDD[(Double, Double)], minK: Int, maxK: Int): (Int, Double) = {
@@ -82,7 +86,7 @@ object KCenter extends PartitionalClustering {
 		val wcss = ks.map(k => {
 			print(s"K: $k \r")
 			val centroids = initializeCentroids(k, data)
-			val clusterCentroids = kCenter2(data, centroids)
+			val clusterCentroids = kCenter(data, centroids)
 			saveCluster(k, clusterCentroids)
 			val squaredErrors = data.map(point => {
 				val distances = clusterCentroids.map(centroid => euclideanDistance(point, centroid))

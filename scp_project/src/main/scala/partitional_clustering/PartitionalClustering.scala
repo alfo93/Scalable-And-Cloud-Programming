@@ -19,6 +19,8 @@ trait PartitionalClustering {
 	// Euclidean distance between two points
 	def euclideanDistance(p1: (Double, Double), p2: (Double, Double)): Double = sqrt(pow(p1._1 - p2._1, 2) + pow(p1._2 - p2._2, 2))
 
+
+
 	// Load RDD from CSV file
 	def loadData(spark: SparkSession): RDD[(Double, Double)] = {
 		print("Loading data...")
@@ -76,7 +78,7 @@ trait PartitionalClustering {
 	}
 
 	def checkConvergence(data: List[(Double, Double)], centroids: List[(Double, Double)], newCentroids: List[(Double, Double)]): Boolean = {
-		val threshold = 1e-6
+		val threshold = 1e-2
 		// Calculate the maximum distance between data points and the closest centroids for the current and new centroids
 		val maxDistanceOld = data.map(point => centroids.map(centroid => euclideanDistance(point, centroid)).min).max
 		val maxDistanceNew = data.map(point => newCentroids.map(centroid => euclideanDistance(point, centroid)).min).max
@@ -84,7 +86,6 @@ trait PartitionalClustering {
 		// Check if the maximum distance change between the old and new centroids is below the threshold
 		Math.abs(maxDistanceOld - maxDistanceNew) <= threshold
 	}
-
 
 	def saveCluster(k: Int, clusters: Array[(Double, Double)]): Unit = resultsByK += (k -> clusters)
 

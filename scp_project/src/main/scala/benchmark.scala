@@ -4,8 +4,8 @@ import partitional_clustering.PartitionalClustering
 
 object benchmark {
 	private val iters = 10
-	private val test_Sequential = true
-	private val test_Parallel = false
+	private val test_Sequential = false
+	private val test_Parallel = true
 
 	def main(args: Array[String]): Unit = {
 		if (test_Parallel) {
