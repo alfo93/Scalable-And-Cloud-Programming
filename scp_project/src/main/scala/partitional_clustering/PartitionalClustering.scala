@@ -2,6 +2,8 @@ package partitional_clustering
 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
+import partitional_clustering.parallel.KCenter.euclideanDistance
+
 import scala.collection.mutable
 import scala.math.{pow, sqrt}
 
@@ -18,8 +20,6 @@ trait PartitionalClustering {
 
 	// Euclidean distance between two points
 	def euclideanDistance(p1: (Double, Double), p2: (Double, Double)): Double = sqrt(pow(p1._1 - p2._1, 2) + pow(p1._2 - p2._2, 2))
-
-
 
 	// Load RDD from CSV file
 	def loadData(spark: SparkSession): RDD[(Double, Double)] = {
@@ -66,7 +66,7 @@ trait PartitionalClustering {
 		  ._1
 	}
 
-	// Function used to check convergence in fixed-point iteration
+	// Function used to check convergence in fixed-point iteration for KMEANS
 	def checkConvergence(oldCentroids: List[(Double, Double)], newCentroids: List[(Double, Double)]): Boolean = {
 		val epsilon = 1e-6 // Define a small threshold for convergence
 
@@ -77,14 +77,29 @@ trait PartitionalClustering {
 		}
 	}
 
+	// Function used to check convergence in fixed-point iteration for KCENTER
+
+	// Sequential version
 	def checkConvergence(data: List[(Double, Double)], centroids: List[(Double, Double)], newCentroids: List[(Double, Double)]): Boolean = {
-		val threshold = 1e-2
+		val threshold = 1e-6
 		// Calculate the maximum distance between data points and the closest centroids for the current and new centroids
 		val maxDistanceOld = data.map(point => centroids.map(centroid => euclideanDistance(point, centroid)).min).max
 		val maxDistanceNew = data.map(point => newCentroids.map(centroid => euclideanDistance(point, centroid)).min).max
 
 		// Check if the maximum distance change between the old and new centroids is below the threshold
 		Math.abs(maxDistanceOld - maxDistanceNew) <= threshold
+	}
+
+	// Parallel version
+	def checkConvergence(data: RDD[(Double, Double)], oldCentroids: List[(Double, Double)], newCentroids: List[(Double, Double)]): Boolean = {
+		def computeObjectiveValue(data: RDD[(Double, Double)], centroids: List[(Double, Double)]): Double = {
+			data.map(point => centroids.map(centroid => euclideanDistance(point, centroid)).min).sum
+		}
+
+		val epsilon: Double = 1e-3
+		val oldObjectiveValue = computeObjectiveValue(data, oldCentroids)
+		val newObjectiveValue = computeObjectiveValue(data, newCentroids)
+		math.abs(oldObjectiveValue - newObjectiveValue) <= epsilon
 	}
 
 	def saveCluster(k: Int, clusters: Array[(Double, Double)]): Unit = resultsByK += (k -> clusters)

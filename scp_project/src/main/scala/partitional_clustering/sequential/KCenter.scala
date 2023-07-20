@@ -36,9 +36,9 @@ object KCenter extends PartitionalClustering {
 		var iteration = 0
 		var clusters = Map.empty[(Double, Double), List[(Double, Double)]]
 		var isConverged = false
+		val maxIterations = 100
 
-		while (!isConverged) {
-			//print("\rIteration: " + iteration)
+		while (!isConverged && iteration < maxIterations) {
 			clusters = Map.empty.withDefaultValue(List.empty)
 
 			for (point <- data) {
@@ -69,6 +69,8 @@ object KCenter extends PartitionalClustering {
 
 		currentCentroids.toArray
 	}
+
+
 
 
 	def elbowMethod(data: List[(Double, Double)], minK: Int, maxK: Int): (Int, Double) = {

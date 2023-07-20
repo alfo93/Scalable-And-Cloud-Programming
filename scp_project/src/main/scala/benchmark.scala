@@ -3,7 +3,7 @@ import partitional_clustering.sequential
 import partitional_clustering.PartitionalClustering
 
 object benchmark {
-	private val iters = 10
+	private val iters = 2
 	private val test_Sequential = false
 	private val test_Parallel = true
 

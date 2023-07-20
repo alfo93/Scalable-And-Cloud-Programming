@@ -36,7 +36,6 @@ object KMeans extends PartitionalClustering {
 		var isConverged = false
 
 		while (!isConverged) {
-			//print("\rIteration: " + iteration)
 			clusters = Map.empty.withDefaultValue(List.empty)
 
 			for (point <- data) {
