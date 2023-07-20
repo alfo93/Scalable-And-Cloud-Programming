@@ -14,7 +14,7 @@ object benchmark {
 		}
 
 		if (test_Sequential) {
-			test_alg(sequential.KMeans, args)
+			//test_alg(sequential.KMeans, args)
 			test_alg(sequential.KCenter, args)
 		}
 	}

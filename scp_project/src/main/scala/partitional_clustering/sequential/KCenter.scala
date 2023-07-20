@@ -2,6 +2,7 @@ package partitional_clustering.sequential
 
 import org.apache.spark.sql.SparkSession
 import partitional_clustering.PartitionalClustering
+import partitional_clustering.sequential.KMeans.checkConvergence
 
 object KCenter extends PartitionalClustering {
 	override var filePath: String = ""
@@ -31,30 +32,44 @@ object KCenter extends PartitionalClustering {
 	}
 
 	private def kCenter(data: List[(Double, Double)], centroids: List[(Double, Double)]): Array[(Double, Double)] = {
-		val clusters = new Array[(Double, Double)](centroids.length)
+		var currentCentroids = centroids
+		var iteration = 0
+		var clusters = Map.empty[(Double, Double), List[(Double, Double)]]
+		var isConverged = false
 
-		// Initialize the clusters with the centroids
-		for (i <- clusters.indices) {
-			clusters(i) = centroids(i)
+		while (!isConverged) {
+			//print("\rIteration: " + iteration)
+			clusters = Map.empty.withDefaultValue(List.empty)
+
+			for (point <- data) {
+				val distances = currentCentroids.map(centroid => euclideanDistance(point, centroid))
+				val minDistance = distances.min
+				val closestCentroid = currentCentroids(distances.indexOf(minDistance))
+
+				// Update `clusters` with new point assigned to `closestCentroid`
+				clusters += (closestCentroid -> (point :: clusters(closestCentroid)))
+			}
+
+			val newCentroids = clusters.keys.toList.map(centroid => {
+				val pointsInCluster = clusters(centroid)
+
+				// Compute the farthest point in the cluster from the centroid
+				val farthestPoint = pointsInCluster.maxBy(p => euclideanDistance(p, centroid))
+
+				// Set the new centroid as the farthest point
+				farthestPoint
+			})
+
+			// Check if the centroids have converged
+			isConverged = checkConvergence(
+			println(f"iteration: ${iteration}")
+			currentCentroids = newCentroids
+			iteration += 1
 		}
 
-		// Find the farthest point from the nearest cluster for each point
-		for ((x, y) <- data) {
-			var minDistance = Double.PositiveInfinity
-			var nearestCluster = -1
-			for (i <- clusters.indices) {
-				val distance = euclideanDistance((x, y), clusters(i))
-				if (distance < minDistance) {
-					minDistance = distance
-					nearestCluster = i
-				}
-			}
-			if (minDistance > euclideanDistance((x, y), clusters(nearestCluster))) {
-				clusters(nearestCluster) = (x, y)
-			}
-		}
-		clusters
+		currentCentroids.toArray
 	}
+
 
 	def elbowMethod(data: List[(Double, Double)], minK: Int, maxK: Int): (Int, Double) = {
 		val ks = Range(minK, maxK + 1)
