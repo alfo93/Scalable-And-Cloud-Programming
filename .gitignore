@@ -5,3 +5,4 @@ region_shape.geojson
 /scp_project/src/resources/*.csv
 *.png
 spark/*
+*.csv

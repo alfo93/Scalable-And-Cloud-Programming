@@ -29,37 +29,57 @@ object KMeans extends PartitionalClustering {
 		(bestK, time)
 	}
 
+	/**
+	 * Performs the k-means clustering algorithm on a given set of data points represented as an RDD of (x, y) coordinates.
+	 * The algorithm aims to partition the data into K clusters and determine the optimal positions of the cluster centers
+	 * (centroids) based on the input `centroids` list. The function iteratively updates the centroids until convergence,
+	 * where the centroids stop changing significantly.
+	 *
+	 * @param data      An RDD of data points, each represented as a tuple of (x, y) coordinates.
+	 * @param centroids A list of initial centroids, each represented as a tuple of (x, y) coordinates, used as starting points.
+	 * @return An array containing the final set of centroids after the algorithm converges.
+	 */
 	private def kMeans(data: RDD[(Double, Double)], centroids: List[(Double, Double)]): Array[(Double, Double)] = {
 		var currentCentroids = centroids
-		val K = centroids.length
 		var isConverged = false
+		var iteration = 0
+		val maxIterations = 100
 
-		while (!isConverged) {
+		while (!isConverged && iteration < maxIterations) {
 			// Assign each data point to the closest centroid
 			val closestCentroids = data.mapPartitions(iter => {
 				val localCentroids = currentCentroids
+
+				// For each data point in this partition, find the closest centroid and emit (centroid, point) pairs
 				iter.map(point => (closestCentroid(point, localCentroids), point))
-			})
-			  .persist()
+			}).persist() // Cache the closestCentroids RDD to speed up computations in subsequent iterations
 
-			// Calculate the mean of all points assigned to each centroid and set it as the new centroid
-			val newCentroids = closestCentroids
-			  .aggregateByKey((0.0, 0.0, 0))(
-				  (acc, point) => (acc._1 + point._1, acc._2 + point._2, acc._3 + 1),
-				  (acc1, acc2) => (acc1._1 + acc2._1, acc1._2 + acc2._2, acc1._3 + acc2._3)
-			  )
-			  .mapValues { case (sumX, sumY, count) => (sumX / count, sumY / count) }
-			  .values
-			  .coalesce(K, shuffle = true)
-			  .collect()
-			  .toList
+			val centroidSumCountRDD = closestCentroids
+			  .map { case (centroid, point) =>
+				  val (x, y) = point
+				  (centroid, (x, y, 1))
+			  }
+			  .reduceByKey { case ((x1, y1, count1), (x2, y2, count2)) =>
+				  (x1 + x2, y1 + y2, count1 + count2)
+			  }
 
+			// Calculate the new centroid by dividing the sum of (x, y) coordinates by the count of data points
+			val newCentroidsRDD = centroidSumCountRDD
+			  .map { case (centroid, (sumX, sumY, count)) =>
+				  (centroid, (sumX / count, sumY / count))
+			  }
+
+			// Extract the new centroids as a list on the driver
+			val newCentroidsList = newCentroidsRDD.values.collect().toList
+
+			// Unpersist the cached closestCentroids RDD since we don't need it anymore
 			closestCentroids.unpersist()
 
 			// Check if the centroids have converged
-			isConverged = checkConvergence(currentCentroids, newCentroids)
+			isConverged = checkConvergence(currentCentroids, newCentroidsList)
 
-			currentCentroids = newCentroids
+			currentCentroids = newCentroidsList
+			iteration += 1
 		}
 
 		currentCentroids.toArray

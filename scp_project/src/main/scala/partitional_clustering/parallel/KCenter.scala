@@ -31,40 +31,49 @@ object KCenter extends PartitionalClustering {
 		(bestK, time)
 	}
 
-	def kCenter(data: RDD[(Double, Double)], centroids: List[(Double, Double)]): Array[(Double, Double)] = {
-		var currentCentroids = centroids
-		var isConverged = false
-		var iteration = 0
+	/**
+	 * Performs the Farthest-First Traversal algorithm to select k initial centroids for the k-means clustering algorithm.
+	 * The algorithm starts with an empty list of centroids and iteratively adds k centroids by selecting the farthest point
+	 * from the nearest existing centroid in the data.
+	 *
+	 * @param data An RDD of data points, each represented as a tuple of (x, y) coordinates.
+	 * @param k    The number of centroids to select and the number of clusters to create.
+	 * @return An array containing k initial centroids selected by the Farthest-First Traversal algorithm.
+	 */
+	private def farthestFirstTraversal(data: RDD[(Double, Double)], k: Int): Array[(Double, Double)] = {
+		var centers = List.empty[(Double, Double)]
 
-		def computeNewCentroid(centroid: (Double, Double), pointsInCluster: Iterable[(Double, Double)]): (Double, Double) = {
-			if (pointsInCluster.isEmpty) centroid
-			else pointsInCluster.maxBy(p => euclideanDistance(p, centroid))
+		// Select the first center at random
+		centers = data.takeSample(withReplacement = false, num = 1).toList
+
+		// Broadcast the centers to all worker nodes
+		var centersBroadcast = data.sparkContext.broadcast(centers)
+
+		// Loop until we have found all the centers
+		while (centers.length < k) {
+			// Find the farthest point from the nearest center for each point
+			val farthestPoint = data.map(point => (point, centersBroadcast.value.minBy(center => euclideanDistance(center, point))))
+			  .reduce((a, b) => if (euclideanDistance(a._1, a._2) > euclideanDistance(b._1, b._2)) a else b)
+			  ._1
+
+			// Add the farthest point to the centers list
+			centers = farthestPoint :: centers
+
+			// Update the broadcast variable with the new centers list
+			centersBroadcast.unpersist()
+			centersBroadcast = data.sparkContext.broadcast(centers)
 		}
 
-		while (!isConverged && iteration < 100) {
-			val clusters = data
-			  .map(point => (closestCentroid(point, currentCentroids), point))
-			  .groupByKey()
-
-			val newCentroids = clusters.mapValues(points => computeNewCentroid(points.head, points)).collectAsMap()
-
-			// Check if the centroids have converged
-			isConverged = checkConvergence(data, currentCentroids, newCentroids.values.toList)
-			iteration += 1
-			currentCentroids = newCentroids.values.toList
-		}
-
-		currentCentroids.toArray
+		// Convert the centers list to an array and return it
+		centers.reverse.toArray
 	}
-
 
 	def elbowMethod(data: RDD[(Double, Double)], minK: Int, maxK: Int): (Int, Double) = {
 		val ks = Range(minK, maxK + 1)
 		val start = System.nanoTime()
 		val wcss = ks.map(k => {
 			print(s"K: $k \r")
-			val centroids = initializeCentroids(k, data)
-			val clusterCentroids = kCenter(data, centroids)
+			val clusterCentroids = farthestFirstTraversal(data, k)
 			saveCluster(k, clusterCentroids)
 			val squaredErrors = data.map(point => {
 				val distances = clusterCentroids.map(centroid => euclideanDistance(point, centroid))

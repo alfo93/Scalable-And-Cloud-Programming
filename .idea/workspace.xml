@@ -5,16 +5,56 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="443facf7-c94e-4952-bd57-000f5ecc80f4" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/src/main/scala/KCenter.scala" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/src/main/scala/KCenter.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/src/main/scala/Kmeans.scala" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/src/main/scala/Kmeans.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/src/main/scala/clustering_alg.scala" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/src/main/scala/clustering_alg.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.13/classes/KCenter$$typecreator10$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.13/classes/KCenter$.class" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/scala-2.13/classes/KCenter$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.13/classes/KCenter.class" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/scala-2.13/classes/KCenter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.13/classes/Kmeans$.class" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/scala-2.13/classes/Kmeans$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.13/classes/Kmeans.class" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/scala-2.13/classes/Kmeans.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.13/classes/clustering_alg.class" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/scala-2.13/classes/clustering_alg.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cloud_results.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/cloud_results.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/clustering_graphs.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/clustering_graphs.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/src/main/scala/Benchmark.scala" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/src/main/scala/partitional_clustering/PartitionalClustering.scala" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/src/main/scala/partitional_clustering/PartitionalClustering.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/src/main/scala/partitional_clustering/parallel/KCenter.scala" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/src/main/scala/partitional_clustering/parallel/KCenter.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/src/main/scala/partitional_clustering/parallel/KMeans.scala" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/src/main/scala/partitional_clustering/parallel/KMeans.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/src/main/scala/partitional_clustering/sequential/KCenter.scala" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/src/main/scala/partitional_clustering/sequential/KCenter.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/src/main/scala/partitional_clustering/sequential/KMeans.scala" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/src/main/scala/partitional_clustering/sequential/KMeans.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.12/classes/benchmark$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.12/classes/benchmark.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.12/classes/partitional_clustering/PartitionalClustering.class" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/scala-2.12/classes/partitional_clustering/PartitionalClustering.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.12/classes/partitional_clustering/parallel/KCenter$.class" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/scala-2.12/classes/partitional_clustering/parallel/KCenter$.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.12/classes/partitional_clustering/parallel/KCenter.class" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/scala-2.12/classes/partitional_clustering/parallel/KCenter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.12/classes/partitional_clustering/parallel/KMeans$.class" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/scala-2.12/classes/partitional_clustering/parallel/KMeans$.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.12/classes/partitional_clustering/parallel/KMeans.class" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/scala-2.12/classes/partitional_clustering/parallel/KMeans.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.12/classes/partitional_clustering/sequential/KCenter$.class" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/scala-2.12/classes/partitional_clustering/sequential/KCenter$.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.12/classes/partitional_clustering/sequential/KCenter.class" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/scala-2.12/classes/partitional_clustering/sequential/KCenter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.12/classes/partitional_clustering/sequential/KMeans$.class" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/scala-2.12/classes/partitional_clustering/sequential/KMeans$.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.12/classes/partitional_clustering/sequential/KMeans.class" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/scala-2.12/classes/partitional_clustering/sequential/KMeans.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.12/sync/copy-resource 2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.12/update/update_cache_2.12/inputs 2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.12/zinc/inc_compile_2.12 2.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/scala-2.12/zinc/inc_compile_2.12.zip" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/scala-2.12/zinc/inc_compile_2.12.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/_global/dependencyPositions/_global/streams/update_cache_2.12/input_dsp 2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/_global/moduleSettings/_global/streams/out 2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/_global/projectDescriptors/_global/streams/out 2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/_global/scalaCompilerBridgeScope/_global/streams/out 2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/compile/bspReporter/_global/streams/out 2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/compile/compile/_global/streams/out 2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/compile/compileIncremental/_global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/streams/compile/compileIncremental/_global/streams/out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/compile/compileIncremental/_global/streams/out 2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/compile/copyResources/_global/streams/out 2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/compile/incOptions/_global/streams/out 2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/compile/internalDependencyClasspath/_global/streams/export 2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/compile/packageBin/_global/streams/inputs" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/streams/compile/packageBin/_global/streams/inputs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/compile/packageBin/_global/streams/inputs 2" beforeDir="false" afterPath="$PROJECT_DIR$/scp_project/target/streams/compile/packageBin/_global/streams/inputs 2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/compile/packageBin/_global/streams/out 2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/compile/packageBin/_global/streams/output 2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/compile/scalacOptions/_global/streams/out 2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/compile/unmanagedClasspath/_global/streams/export 2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scp_project/target/streams/compile/unmanagedClasspath/_global/streams/out 2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.12/update/update_cache_2.12/inputs" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.12/update/update_cache_2.12/inputs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.12/update/update_cache_2.12/output" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.12/update/update_cache_2.12/output" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/streams/compile/_global/_global/compileOutputs/previous" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/_global/_global/compileOutputs/previous" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/streams/compile/dependencyClasspath/_global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/dependencyClasspath/_global/streams/export" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/streams/compile/externalDependencyClasspath/_global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/externalDependencyClasspath/_global/streams/export" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/streams/compile/incOptions/_global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/incOptions/_global/streams/out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/streams/compile/managedClasspath/_global/streams/export" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/managedClasspath/_global/streams/export" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/streams/compile/packageBin/_global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/packageBin/_global/streams/out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/streams/compile/packageBin/_global/streams/output" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/packageBin/_global/streams/output" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,23 +81,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/alfo/ProgettiUnibo/scala&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/fbartolucci/Documents/Git/scala.nosync",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/data" />
@@ -68,19 +109,6 @@
       <option name="ALTERNATIVE_JRE_PATH" value="$USER_HOME$/Library/Java/JavaVirtualMachines/corretto-11.0.18/Contents/Home" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="Main" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="scala" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="scala" />
-      <option name="filePath" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -101,6 +129,7 @@
       <workItem from="1680361130619" duration="27000" />
       <workItem from="1680361188139" duration="287000" />
       <workItem from="1681226636696" duration="45000" />
+      <workItem from="1689948791752" duration="10000" />
     </task>
     <servers />
   </component>

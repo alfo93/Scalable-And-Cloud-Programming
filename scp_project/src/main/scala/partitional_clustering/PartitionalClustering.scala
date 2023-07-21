@@ -2,7 +2,6 @@ package partitional_clustering
 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
-import partitional_clustering.parallel.KCenter.euclideanDistance
 
 import scala.collection.mutable
 import scala.math.{pow, sqrt}
@@ -18,10 +17,21 @@ trait PartitionalClustering {
 	
 	def getAlgorithmName: String = this.getClass.getSimpleName
 
-	// Euclidean distance between two points
+	/**
+	 * Calculates the Euclidean distance between two points represented as tuples (Double, Double).
+	 *
+	 * @param p1 The first point as a tuple (x1, y1).
+	 * @param p2 The second point as a tuple (x2, y2).
+	 * @return The Euclidean distance between the two points.
+	 */
 	def euclideanDistance(p1: (Double, Double), p2: (Double, Double)): Double = sqrt(pow(p1._1 - p2._1, 2) + pow(p1._2 - p2._2, 2))
 
-	// Load RDD from CSV file
+	/**
+	 * Loads data from a CSV file into an RDD of tuples (Double, Double) using Spark.
+	 *
+	 * @param spark    The SparkSession object to use for reading data.
+	 * @return An RDD containing tuples (x, y) where x and y are Double values extracted from the CSV file.
+	 */
 	def loadData(spark: SparkSession): RDD[(Double, Double)] = {
 		print("Loading data...")
 		val res = spark.read.format("csv").option("header", "true").option("inferSchema", "true").load(filePath)
@@ -33,40 +43,48 @@ trait PartitionalClustering {
 		res
 	}
 
-	def initializeCentroids(k: Int, data: List[(Double, Double)]): List[(Double, Double)] = {
-		scala.util.Random.shuffle(data).take(k)
+	/**
+	 * Initialize centroids for the clustering algorithm using either a List or RDD data.
+	 *
+	 * @param k    The number of centroids to initialize.
+	 * @param data The input data from which centroids will be initialized.
+	 * @tparam T The type of the data (List or RDD). Must be convertible to Traversable[(Double, Double)].
+	 * @return A List of centroids initialized from the input data.
+	 * @throws IllegalArgumentException if the input data type is not supported (List or RDD[(Double, Double)]).
+	 */
+	def initializeCentroids[T](k: Int, data: T): List[(Double, Double)] = {
+		data match {
+			case listData: List[(Double, Double)] => scala.util.Random.shuffle(listData).take(k)
+			case rddData: RDD[(Double, Double)] =>
+				rddData.takeSample(withReplacement = false, k, System.nanoTime().toInt).toList
+			case _ => throw new IllegalArgumentException("Unsupported data type. Use List or RDD[(Double, Double)].")
+		}
 	}
 
-	def initializeCentroids(k: Int, data: RDD[(Double, Double)]): List[(Double, Double)] = {
-		// Randomly sample k points from the data
-		data.takeSample(withReplacement = false, k, System.nanoTime().toInt).toList
-	}
-
-	// ClosestCentroid is a helper function that takes a data point and a list of centroids,
-	// and returns the closest centroid to the data point based on Euclidean distance.
-
-	// Closest centroid for List
-	def closestCentroid(point: (Double, Double), centroids: List[(Double, Double)]): (Double, Double) = {
-		centroids.map(centroid => (centroid, euclideanDistance(point, centroid)))
+	/**
+	 * Find the closest centroid to a given point from a collection of centroids.
+	 *
+	 * @param point     The point for which the closest centroid needs to be found.
+	 * @param centroids The collection of centroids to compare against.
+	 * @tparam T The type of the collection (List, Array, etc.). Must be convertible to Traversable[(Double, Double)].
+	 * @return The centroid from the collection that is closest to the given point.
+	 */
+	def closestCentroid[T](point: (Double, Double), centroids: T)(implicit ev: T => Traversable[(Double, Double)]): (Double, Double) = {
+		centroids
+		  .map(centroid => (centroid, euclideanDistance(point, centroid)))
 		  .reduce((a, b) => if (a._2 < b._2) a else b)
 		  ._1
 	}
 
-	// Closest centroid for Array
-	def closestCentroid(point: (Double, Double), centroids: Array[(Double, Double)]): (Double, Double) = {
-		centroids.map(centroid => (centroid, euclideanDistance(point, centroid)))
-		  .reduce((a, b) => if (a._2 < b._2) a else b)
-		  ._1
-	}
 
-	// Closest centroid for RDD
-	def closestCentroid(point: (Double, Double), centroids: RDD[(Double, Double)]): (Double, Double) = {
-		centroids.map(centroid => (centroid, euclideanDistance(point, centroid)))
-		  .reduce((a, b) => if (a._2 < b._2) a else b)
-		  ._1
-	}
-
-	// Function used to check convergence in fixed-point iteration for KMEANS
+	/**
+	 * Checks the convergence of K-means algorithm by comparing the distance between old and new centroids.
+	 *
+	 * @param oldCentroids List of old centroids as tuples (x, y).
+	 * @param newCentroids List of new centroids as tuples (x, y).
+	 * @return True if the distance between each old and new centroid is below the defined threshold (epsilon);
+	 *         otherwise, returns False, indicating that the centroids have not yet converged.
+	 */
 	def checkConvergence(oldCentroids: List[(Double, Double)], newCentroids: List[(Double, Double)]): Boolean = {
 		val epsilon = 1e-6 // Define a small threshold for convergence
 
@@ -77,57 +95,29 @@ trait PartitionalClustering {
 		}
 	}
 
-	// Function used to check convergence in fixed-point iteration for KCENTER
-
-	// Sequential version
-	def checkConvergence(data: List[(Double, Double)], centroids: List[(Double, Double)], newCentroids: List[(Double, Double)]): Boolean = {
-		val threshold = 1e-6
-		// Calculate the maximum distance between data points and the closest centroids for the current and new centroids
-		val maxDistanceOld = data.map(point => centroids.map(centroid => euclideanDistance(point, centroid)).min).max
-		val maxDistanceNew = data.map(point => newCentroids.map(centroid => euclideanDistance(point, centroid)).min).max
-
-		// Check if the maximum distance change between the old and new centroids is below the threshold
-		Math.abs(maxDistanceOld - maxDistanceNew) <= threshold
-	}
-
-	// Parallel version
-	def checkConvergence(data: RDD[(Double, Double)], oldCentroids: List[(Double, Double)], newCentroids: List[(Double, Double)]): Boolean = {
-		def computeObjectiveValue(data: RDD[(Double, Double)], centroids: List[(Double, Double)]): Double = {
-			data.map(point => centroids.map(centroid => euclideanDistance(point, centroid)).min).sum
-		}
-
-		val epsilon: Double = 1e-3
-		val oldObjectiveValue = computeObjectiveValue(data, oldCentroids)
-		val newObjectiveValue = computeObjectiveValue(data, newCentroids)
-		math.abs(oldObjectiveValue - newObjectiveValue) <= epsilon
-	}
-
 	def saveCluster(k: Int, clusters: Array[(Double, Double)]): Unit = resultsByK += (k -> clusters)
 
 	def saveClusterCsv(data: List[(Double, Double)], path: String): Unit = {
 		if (!saveResults) return
 
 		print("\nSaving clusters...")
-		resultsByK.foreach(x => {
-			val k = x._1
-			val clusters = x._2
+		resultsByK.foreach { case (k, clusters) =>
 			val clusters_data = data.map(point => {
 				val centroid = closestCentroid(point, clusters)
-				point._1.toString + "," + point._2.toString + "," + centroid._1.toString + "," + centroid._2.toString
+				s"${point._1},${point._2},${centroid._1},${centroid._2}"
 			})
 			val clusters_file = new java.io.PrintWriter(new java.io.File(path + k.toString + ".csv"))
 			clusters_data.foreach(clusters_file.println)
 			clusters_file.close()
-
-		})
+		}
 		print("OK\n")
 	}
 
-	def saveWcss(filename:String, ks: Range, wcss: Seq[Double]): Unit = {
+	def saveWcss(filename: String, ks: Range, wcss: Seq[Double]): Unit = {
 		if (!saveResults) return
 
 		print("Saving WCSS...")
-		val wcss_data = ks.zip(wcss).map(x => x._1.toString + "," + x._2.toString)
+		val wcss_data = ks.zip(wcss).map(x => s"${x._1},${x._2}")
 		val wcss_file = new java.io.PrintWriter(new java.io.File(filename))
 		wcss_data.foreach(wcss_file.println)
 		wcss_file.close()
@@ -138,47 +128,12 @@ trait PartitionalClustering {
 		if (!saveResults) return
 
 		print("Saving run...")
-		val run_data = minK.toString + "," + maxK.toString + ","  + bestK.toString + "," + time.toString
+		val run_data = s"$minK,$maxK,$bestK,$time"
 		val run_file = new java.io.PrintWriter(new java.io.File(filename))
 		run_file.println(run_data)
 		run_file.close()
 		print("OK\n")
 	}
-
-
-
-	/*
-	def elbowMethod(path: String, data: RDD[(Double, Double)], minK: Int, maxK: Int): Unit = {
-		val ks = Range(minK, maxK + 1)
-
-		val start = System.nanoTime()
-		val wcss = ks.map(k => {
-			println(s"\nK: $k")
-			val centroids = initializeCentroids(k, data)
-			val clusterCentroids = clustering_function(data: RDD[(Double,Double)], centroids: )
-			saveCluster(k, clusterCentroids)
-			val squaredErrors = data.map(point => {
-				val distances = clusterCentroids.map(centroid => euclideanDistance(point, centroid))
-				val minDistance = distances.min
-				minDistance * minDistance
-			})
-			squaredErrors.sum
-		})
-		val end = System.nanoTime()
-		print("\n\nTime: " + (end - start) / 1e9d + "s")
-
-		saveClusterCsv(data.collect().toList, path)
-		saveWcss(path + "_elbow.csv", ks, wcss)
-
-		val diff = wcss.zip(wcss.tail).map(pair => pair._2 - pair._1)
-		val bestK = ks(diff.indexOf(diff.max) + 1)
-		saveRun(path + "_run.csv", minK, maxK, bestK, end - start)
-
-		bestK
-	}
-
-	*/
-
 
 }
 

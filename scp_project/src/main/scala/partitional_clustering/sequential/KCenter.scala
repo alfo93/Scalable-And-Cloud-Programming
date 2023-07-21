@@ -31,55 +31,43 @@ object KCenter extends PartitionalClustering {
 		(bestK, time)
 	}
 
-	private def kCenter(data: List[(Double, Double)], centroids: List[(Double, Double)]): Array[(Double, Double)] = {
-		var currentCentroids = centroids
-		var iteration = 0
-		var clusters = Map.empty[(Double, Double), List[(Double, Double)]]
-		var isConverged = false
-		val maxIterations = 100
+	/**
+	 * Performs the Farthest-First Traversal algorithm to select k initial centroids for the k-means clustering algorithm.
+	 * The algorithm starts with an empty array of centroids and iteratively adds k centroids by selecting the farthest
+	 * point from the nearest existing centroid in the data.
+	 *
+	 * @param data A list of data points, each represented as a tuple of (x, y) coordinates.
+	 * @param k    The number of centroids to select and the number of clusters to create.
+	 * @return An array containing k initial centroids selected by the Farthest-First Traversal algorithm.
+	 */
+	private def farthestFirstTraversal(data: List[(Double, Double)], k: Int): Array[(Double, Double)] = {
+		val clusters = new Array[(Double, Double)](k)
 
-		while (!isConverged && iteration < maxIterations) {
-			clusters = Map.empty.withDefaultValue(List.empty)
+		// Initialize the clusters with random point from the data
+		clusters(0) = data(scala.util.Random.nextInt(data.length))
 
-			for (point <- data) {
-				val distances = currentCentroids.map(centroid => euclideanDistance(point, centroid))
-				val minDistance = distances.min
-				val closestCentroid = currentCentroids(distances.indexOf(minDistance))
-
-				// Update `clusters` with new point assigned to `closestCentroid`
-				clusters += (closestCentroid -> (point :: clusters(closestCentroid)))
+		// Function to find the farthest point from the nearest cluster for each point
+		def findFarthestPoint(points: List[(Double, Double)], centers: Array[(Double, Double)]): (Double, Double) = {
+			points.maxBy { point =>
+				centers.map(euclideanDistance(point, _)).min
 			}
-
-			val newCentroids = clusters.keys.toList.map(centroid => {
-				val pointsInCluster = clusters(centroid)
-
-				// Compute the farthest point in the cluster from the centroid
-				val farthestPoint = pointsInCluster.maxBy(p => euclideanDistance(p, centroid))
-
-				// Set the new centroid as the farthest point
-				farthestPoint
-			})
-
-			// Check if the centroids have converged
-			isConverged = checkConvergence(data, currentCentroids, newCentroids)
-		
-			currentCentroids = newCentroids
-			iteration += 1
 		}
 
-		currentCentroids.toArray
+		// Apply Farthest First Traversal
+		for (i <- 1 until k) {
+			val farthestPoint = findFarthestPoint(data, clusters.take(i))
+			clusters(i) = farthestPoint
+		}
+
+		clusters
 	}
-
-
-
 
 	def elbowMethod(data: List[(Double, Double)], minK: Int, maxK: Int): (Int, Double) = {
 		val ks = Range(minK, maxK + 1)
 		val start = System.nanoTime()
 		val wcss = ks.map(k => {
 			print(s"K: $k\r")
-			val centroids = scala.util.Random.shuffle(data).take(k)
-			val clusterCentroids = kCenter(data, centroids)
+			val clusterCentroids = farthestFirstTraversal(data, k)
 			saveCluster(k, clusterCentroids)
 			val squaredErrors = data.map(point => {
 				val distances = clusterCentroids.map(centroid => euclideanDistance(point, centroid))
