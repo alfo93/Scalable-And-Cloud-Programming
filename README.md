@@ -6,7 +6,7 @@ Algoritmi implementati:
 * K-means
 * K-center
 
-Deployment su GCP
+## Deployment su GCP
 
 Per effettuare il deployment del progetto su Google Cloud Platofrm abbiamo eseguito i seguenti step:
 
