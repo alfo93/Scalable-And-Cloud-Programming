@@ -3,8 +3,8 @@
 Questa repository contiene il codice sorgente per l'esame relativo alla materia "Scalable and Cloud programming" effettuato nell'anno accademico 2022-23. L'obiettivo del progetto consiste nella implementazione di due algoritmi di clustering con l'obiettivo principale di valutare la fattibilità di tali algoritmi in scenari del mondo reale, concentrandoci specificamente sulla loro applicazione nel clustering delle regioni per determinare posizioni ottimali per la creazione di centri commerciali
 
 Algoritmi implementati:
-[*] K-means
-[*] K-center
+* K-means
+* K-center
 
 Deployment su GCP
 
